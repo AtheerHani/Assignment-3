@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Atheer's Portfolio</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="assets/images/new favicon.png" sizes="32x32" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
         <div class="brand">
-          <a href="about.html" class="site-title"><img src="assets/images/favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
+          <a href="about.html" class="site-title"><img src="assets/images/new favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
         </div>
 
         <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 
         <nav id="navbar" class="main-nav" aria-label="Primary">
           <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="resume.html">Resume</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
 
@@ -33,7 +33,8 @@
     </header>
 
     <main>
-      <section class="surface">
+      <!-- ABOUT -->
+      <section class="surface" id="about">
         <div class="container">
           <h2>
             <span class="visually-hidden">Hi, I'm Atheer</span>
@@ -46,9 +47,212 @@
               <p>I enjoy building intuitive interfaces and practical web apps that solve real problems, with a strong interest in usability and accessibility.</p>
             </div>
             <div class="about-aside">
-              <img src="assets/images/portait.JPG" alt="Personal Image" class="profile-small">
+              <img src="assets/images/portrait.png" alt="Personal Image" class="profile-small">
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- TECHNICAL SKILLS (moved here from Experience) -->
+      <section class="skills-section">
+        <!-- Consolidated skills grid: 6 key skills, one Figma entry only -->
+        <div class="container">
+          <div class="skills-grid" role="list" aria-label="Key technical skills">
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/figma.png" alt="Figma logo">
+              <div class="skill-name">Figma</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/canva.png" alt="Canva logo">
+              <div class="skill-name">Canva</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/java.png" alt="Java logo">
+              <div class="skill-name">Java</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/python.png" alt="Python logo">
+              <div class="skill-name">Python</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/js.png" alt="JavaScript logo">
+              <div class="skill-name">JavaScript</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/css.png" alt="CSS logo">
+              <div class="skill-name">CSS</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS (embedded) -->
+      <section class="surface" id="projects">
+        <div class="container">
+          <div class="section-head">
+            <h2>Projects</h2>
+          </div>
+
+          <div class="projects-grid projects-container">
+            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="app" data-title="FaceLite" data-link="https://github.com/AtheerHani/ICS108-Project">
+                <div class="card" role="link" tabindex="0">
+                <div class="content">
+                  <div class="front">
+                    <div class="inner">
+                      <img src="assets/images/FaceLite.png" alt="FaceLite Logo" class="project-logo">
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="inner">
+                      <p>FaceLite is a JavaFX-based social networking application where users can create and customize profiles, add friends, share updates, and manage photos.</p>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="web" data-title="حُجرة" data-link="https://github.com/AtheerHani/SWE363-Web-Engineering-Development-Project-T251">
+                <div class="card" role="link" tabindex="0">
+                <div class="content">
+                  <div class="front">
+                    <div class="inner">
+                      <img src="assets/images/hujra white.png" alt="حُجرة Logo" class="project-logo">
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="inner">
+                      <p>حُجرة connects people with unused spaces to those seeking affordable storage solutions. It includes listings, booking, secure payments, and messaging.</p>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE (embedded) -->
+      <section class="surface" id="experience">
+        <div class="container">
+          <div class="section-head">
+            <h2>Experience</h2>
+          </div>
+          <div class="resume">
+            <h3 class="section-sub">Professional development</h3>
+            <div class="dev-grid" role="list">
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">KAUST AI Specialization Program</div>
+                <div class="dev-date">Nov. 2025</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">United Kingdom Visit - KFUPM Representative</div>
+                <div class="dev-date">Oct. 2025</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Mentee — KFUPM Mentorship Program</div>
+                <div class="dev-date">Feb. 2024 – May 2024</div>
+              </div>
+            </div>
+            
+            
+            <h3 class="section-sub">Conferences, Events &amp; Clubs</h3>
+            <div class="conf-grid" role="list">
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Leader - Event Planning team - Robonexus Festival</div>
+                <div class="conf-date">Nov. 2025 – Present</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - Sponsorships Team - KFUPM World Event</div>
+                <div class="conf-date">July 2025 – Nov. 2025</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - Tech Team - Gaming+ Event</div>
+                <div class="conf-date">May 2025 – Present</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - KFUPM Yearbook</div>
+                <div class="conf-date">Nov. 2024 – May. 2025</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Leader - Design committee — KFUPM Computer Club</div>
+                <div class="conf-date">June 2024 – Dec. 2024</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Core member - Google Developer Students Club (GDSC)</div>
+                <div class="conf-date">Jan. 2024 – Aug. 2024</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - UAS2030 Autopilot &amp; Control team</div>
+                <div class="conf-date">Oct. 2023 – Feb. 2025</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - KFUPM Toastmasters Club</div>
+                <div class="conf-date">Sep. 2023 – Sep. 2024</div>
+              </div>
+            </div>
+            
+            <h3 class="section-sub">Volunteering</h3>
+            <div class="dev-grid" role="list">
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Resident Assistant - Asian Physics Olympiad (APhO'25) at KFUPM (Mawhiba)</div>
+                <div class="dev-date">May 2025</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Resident Assistant - International Chemistry Olympiad (IChO'24) at KSU (Mawhiba)</div>
+                <div class="dev-date">July 2024</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Teacher Assistant - Mawhiba Academic Summer Enrichment program</div>
+                <div class="dev-date">June 2024 – July 2024</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT (embedded) -->
+      <section class="surface" id="contact">
+        <div class="container">
+          <h2>Contact</h2>
+          <form>
+            <div class="form-row">
+              <div>
+                <label for="name">Name</label>
+                <input id="name" type="text" name="name" placeholder="Atheer Almomtin" required />
+                <span class="error" id="nameError" role="alert" aria-live="polite"></span>
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" placeholder="name@gmail.com" required />
+                <span class="error" id="emailError" role="alert" aria-live="polite"></span>
+              </div>
+            </div>
+
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Your message"></textarea>
+              <span class="error" id="messageError" role="alert" aria-live="polite"></span>
+            </div>
+
+            <button type="submit">Send</button>
+            <p id="formStatus" class="status" aria-live="polite" hidden></p>
+          </form>
         </div>
       </section>
     </main>

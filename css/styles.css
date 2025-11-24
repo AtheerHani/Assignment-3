@@ -1,61 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
 :root {
-  /* User-provided palette */
-  --accent-color: #254B8A;    /* Rich cobalt accent */
-  --secondary-color: #12355A; /* Deep navy/indigo */
-  --primary-color: #0B2138;   /* Rich midnight navy */
-  --text-color: #0B2138;      /* use rich midnight navy for text */
-  --muted-color: #809191;     /* Slate grey (unchanged) */
-  --background-color: #F2F2F2; /* Light grey (unchanged) */
-  --surface-color: #AABCBD;   /* Clouded silver (unchanged) */
-  --success-color: #1E5FA8;   /* Deep blue success */
+  /* Darker navy-leaning palette (shifted toward deeper blues/navy) */
+  --accent-color: #1F3A6B;    /* darker cobalt accent */
+  --secondary-color: #0A2340; /* deep navy/indigo */
+  --primary-color: #052033;   /* deep midnight navy */
+  --text-color: #052033;      /* primary used for readable text in light contexts */
+  --muted-color: #5F7386;     /* darker muted slate */
+  --background-color: #E9F0F6; /* slightly cool light background */
+  --surface-color: #6D8899;   /* desaturated navy-surface */
+  --success-color: #174F86;   /* deeper blue success */
   --danger-color: #E74C3C;
-  --shadow: 0 8px 24px rgba(18,24,33,0.08);
+  --shadow: 0 8px 24px rgba(6,16,28,0.12);
 
   /* RGB helpers for creating alpha variants from palette colors */
-  --primary-rgb: 11,33,56;     /* 0B2138 */
-  --secondary-rgb: 18,53,90;   /* 12355A */
-  --accent-rgb: 37,75,138;     /* 254B8A */
-  --success-rgb: 30,95,168;    /* 1E5FA8 */
+  --primary-rgb: 5,32,51;     /* 052033 */
+  --secondary-rgb: 10,35,64;  /* 0A2340 */
+  --accent-rgb: 31,58,107;    /* 1F3A6B */
+  --success-rgb: 23,79,134;   /* 174F86 */
 
   --max-width: 1300px;
   --gap: 20px;
-  /* surface RGB for light mode (Clouded silver #AABCBD) */
-  --surface-rgb: 170,188,189;
+  /* keep header height so layout stays consistent */
+  --header-height: 72px;
+  /* surface RGB for light mode */
+  --surface-rgb: 109,136,153; /* 6D8899 */
 
-  /* Gradient stops (light-mode defaults) */
-  --gradient-1: #8DEEF0; /* Aqua mist - light */
-  --gradient-2: #AABCBD; /* Clouded silver - light */
-  --gradient-3: #F2F2F2; /* Light grey - light */
-  --gradient-4: #254B8A; /* Rich cobalt - accent */
+  /* Gradient stops (shifted toward navy tones) */
+  --gradient-1: #062636; /* deep teal-navy */
+  --gradient-2: #0B3453; /* navy */
+  --gradient-3: #1F3A6B; /* darker cobalt/accent */
+  --gradient-4: #123A5E; /* muted deep blue */
 }
 
 /* Glassmorphism removed per user request — will integrate external snippet when provided */
 
-/* Background decorative blobs, svg shapes & particles (injected via JS) */
-.bg-decor { position: fixed; inset: 0; pointer-events: none; z-index: -2; }
-.blob { position: absolute; opacity: 0.8; filter: blur(60px); animation: float 18s infinite ease-in-out; border-radius: 50%; }
-.blob.blob-1 { width: 520px; height: 520px; left: 8%; top: 12%; background: var(--accent-color); animation-delay: 0s; }
-.blob.blob-2 { width: 640px; height: 640px; right: 6%; top: 20%; background: var(--secondary-color); animation-delay: 3s; }
-.blob.blob-3 { width: 420px; height: 420px; left: 22%; bottom: 18%; background: var(--success-color); animation-delay: 6s; }
-.blob.blob-4 { width: 480px; height: 480px; right: 20%; bottom: 12%; background: var(--primary-color); animation-delay: 9s; }
-
+/* Decorative blobs removed per user request. */
+/* The .svg-shape rule (below) remains for any SVG decorations, but blob rules and
+   float keyframes have been removed so no large blurred blobs are rendered. */
 .svg-shape { position: absolute; opacity: 0.12; z-index: -3; transform-origin: center; animation: rotate 40s linear infinite; }
-
-@keyframes float {
-  0% { transform: translate(0,0) rotate(0deg); border-radius: 50%; }
-  25% { transform: translate(48px,48px) rotate(8deg); border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
-  50% { transform: translate(0,100px) rotate(0deg); border-radius: 30% 60% 70% 40%/50% 60% 30% 60%; }
-  75% { transform: translate(-48px,48px) rotate(-8deg); border-radius: 40% 60% 70% 30%/40% 50% 60% 50%; }
-  100% { transform: translate(0,0) rotate(0deg); border-radius: 50%; }
-}
 
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* Particles container (tiny dots) */
-#particles-js { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.16); }
+/* Particles and animated dots removed per user request. */
 
 /* gentle visibility for content containers when glass applied */
 .glass-applied { background: rgba(var(--surface-rgb, 170, 188, 189), 0.06); border: 1px solid rgba(var(--accent-rgb,37,75,138), 0.03); backdrop-filter: blur(8px) saturate(120%); -webkit-backdrop-filter: blur(8px) saturate(120%); }
@@ -89,25 +76,53 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* Scroll reveal helpers: elements will fade/slide into place when scrolled
+   into view. JS adds the `reveal` class to targets and toggles
+   `reveal-visible` when they intersect; this keeps the DOM unchanged. */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 560ms cubic-bezier(.2,.9,.2,1), transform 560ms cubic-bezier(.2,.9,.2,1); will-change: opacity, transform; }
+.reveal-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Immediately show elements for users who prefer reduced motion */
+  .reveal { transition: none; opacity: 1 !important; transform: none !important; }
+}
+
 /* Layout: let body be a column so footer stays at the bottom and main can grow */
 html, body { height: 100%; }
 body { display: flex; flex-direction: column; min-height: 100vh; }
-main { flex: 1 0 auto; display: flex; flex-direction: column; }
+/* ensure main content sits below the fixed header */
+main { flex: 1 0 auto; display: flex; flex-direction: column; padding-top: var(--header-height); }
 /* Ensure the main container fills available vertical space so content takes more of the page */
 .container.main-fill { flex: 1 0 auto; display: flex; flex-direction: column; }
 
 /* Layout containers */
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 18px; }
-.header-inner { display: flex; align-items: center; gap: 12px; justify-content: space-between; padding: 16px 0; }
+.header-inner { display: flex; align-items: center; gap: 12px; justify-content: space-between; padding: 0 18px; height: var(--header-height); box-sizing: border-box; }
 
 /* make header-inner a positioning context so we can center the nav inside the page container */
 .header-inner { position: relative; }
 
 /* Header / Nav */
-.site-header { background: transparent; position: sticky; top: 0; z-index: 40; backdrop-filter: blur(6px); }
-.site-title { color: var(--primary-color); font-weight: 700; font-size: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+.site-header {
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  /* full-width frosted bar so content doesn't visually run under header */
+  background: rgba(var(--surface-rgb,170,188,189), 0.06);
+  border-bottom: 1px solid rgba(var(--accent-rgb,37,75,138), 0.06);
+  box-shadow: 0 6px 18px rgba(11,33,56,0.06);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+.site-title { color: var(--primary-color); font-weight: 700; font-size: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
 .site-title .dot { color: var(--accent-color); margin-left: 4px; }
-.site-title .brand-icon { width: 32px; height: 32px; display: inline-block; object-fit: contain; border-radius: 6px; }
+.site-title .brand-icon { width: 28px; height: 28px; display: inline-block; object-fit: contain; border-radius: 8px; }
 .main-nav ul { list-style: none; display: flex; gap: 16px; align-items: center; }
 .main-nav a { text-decoration: none; color: var(--primary-color); font-weight: 600; padding: 8px 10px; border-radius: 6px; }
 .main-nav a:hover, .main-nav a:focus { background: rgba(var(--secondary-rgb), 0.08); }
@@ -115,9 +130,66 @@ main { flex: 1 0 auto; display: flex; flex-direction: column; }
 .nav-toggle { display: none; background: none; border: 1px solid transparent; font-size: 20px; padding: 8px; border-radius: 8px; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
 
-/* Center the nav within the page container on wider screens */
+/* Keep brand at left, nav centered, header-actions at right using flexbox
+   so the centered nav cannot overlap the side elements. */
+.brand { flex: 0 0 auto; z-index: 70; display: flex; align-items: center; gap: 8px; }
+.main-nav { flex: 1 1 auto; display: flex; justify-content: center; }
+.main-nav ul { display: flex; gap: 16px; align-items: center; }
+.header-actions { flex: 0 0 auto; z-index: 70; }
+
 @media (min-width: 880px) {
+  /* Make the header-inner span the full viewport so we can place the
+     brand at the far left and actions at the far right while keeping the
+     nav perfectly centered without overlap. */
+  .header-inner { position: absolute; left: 0; right: 0; padding: 0 110px; height: var(--header-height); }
+  .brand { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); }
+  .header-actions { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); }
   .main-nav { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  /* Slightly larger brand icon on wider screens for improved visibility */
+  .site-title .brand-icon { width: 40px; height: 40px; }
+}
+
+@media (min-width: 1200px) {
+  /* Even larger on very wide screens */
+    .site-title .brand-icon { width: 44px; height: 44px; }
+}
+/* Scoped overrides for embedded Projects panel to ensure cards render visibly */
+section#projects .projects-container {
+  display: flex !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  align-items: flex-start !important;
+  padding-bottom: 12px !important;
+}
+section#projects .projects-grid {
+  display: flex !important;
+  gap: 20px !important;
+  align-items: flex-start !important;
+  padding: 8px 6px !important;
+}
+section#projects .project-item {
+  flex: 0 0 520px !important;
+  min-width: 480px !important;
+  min-height: 520px !important;
+  height: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+  z-index: 60 !important;
+}
+section#projects .project-item .card {
+  height: 520px !important;
+  min-height: 480px !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 65 !important;
+}
+section#projects .project-item .front,
+section#projects .project-item .back {
+  position: absolute !important;
+  inset: 0 !important;
 }
 
 /* Nav indicator: sliding underline below the active nav item */
@@ -195,8 +267,35 @@ section { margin: 16px 0; }
     box-shadow: none !important;
   }
 }
+/* When embedding the Projects surface inside the About page, keep the same
+   transparent inner container so the project cards render as they did on the
+   standalone Projects page. */
+section.surface#projects > .container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure the embedded projects panel keeps the same sizing and padding as
+   the standalone Projects page so cards render at their intended large size. */
+@media (min-width: 880px) {
+  section.surface#projects > .container {
+    padding: 48px; /* match main > .surface > .container */
+    min-height: calc(100vh - 260px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* keep heading at top */
+    align-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  /* ensure the projects container fills the available panel height */
+  section.surface#projects .projects-container { height: 100%; align-self: stretch; }
+  /* place the section heading at the top-left of the panel */
+  section.surface#projects .section-head { align-self: flex-start; margin-bottom: 12px; }
+}
 /* Use RGB helpers for translucent surfaces so we can vary opacity per theme */
-.glass-applied, .project-item, .stats-card, .glass-container {
+.glass-applied, .stats-card, .glass-container {
   background: rgba(var(--surface-rgb), 0.06);
   border-radius: 14px;
   border: 1px solid rgba(var(--accent-rgb), 0.03);
@@ -207,8 +306,7 @@ section { margin: 16px 0; }
   transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
 
-/* Slightly stronger frosted look for card items */
-.project-item, .stats-card { background: rgba(var(--surface-rgb), 0.06); border: 1px solid rgba(var(--accent-rgb), 0.03); }
+.stats-card { background: rgba(var(--surface-rgb), 0.06); border: 1px solid rgba(var(--accent-rgb), 0.03); }
 
 
 /* About */
@@ -216,16 +314,156 @@ section { margin: 16px 0; }
 .about-text { flex: 1; }
 .profile-small { width: 180px; border-radius: 10px; object-fit: cover; transition: border-radius 200ms ease, box-shadow 200ms ease; display: block; }
 /* framed aside to crop portrait; default shows more of the image (zoomed out) so the face remains visible */
-.about-aside { width: 360px; height: 360px; overflow: hidden; border-radius: 12px; flex: 0 0 auto; }
-.about-aside .profile-small { width: 100%; height: 100%; object-fit: cover; object-position: center top; transform: none; }
+.about-aside { width: 400px; height: 400px; overflow: hidden; border-radius: 12px; flex: 0 0 auto; }
+.about-aside .profile-small {
+  /* Make the image larger than the container so it fills the frame visually */
+  width: 140%;
+  height: 140%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  margin: 0;
+  transform: translateY(-4%);
+}
  /* Make About paragraph copy larger and more readable */
  .about-text p { font-size: 20px; line-height: 1.95; margin-top: 12px; }
+
+.about-aside {
+  /* slightly smaller frame to better crop the enlarged portrait */
+  width: 400px;
+  height: 400px;
+  padding: 6px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* use accent color as the framed background so transparent PNG looks natural */
+  background: linear-gradient(180deg, rgba(var(--accent-rgb),0.14), rgba(var(--secondary-rgb),0.08));
+  /* soft outer glow and floating shadow */
+  box-shadow: 0 14px 36px rgba(11,33,56,0.12), 0 2px 10px rgba(37,75,138,0.06);
+  border: 2px solid rgba(var(--accent-rgb),0.10);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  will-change: transform;
+  transform: translateZ(0);
+  animation: floatPortrait 5.6s ease-in-out infinite;
+}
+
+.about-aside .profile-small {
+  width: 180%;
+  height: 180%;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  /* slight inner shadow to separate image from frame */
+  box-shadow: inset 0 -6px 20px rgba(11,33,56,0.06);
+}
+
+.section-sub { margin-top: 32px; margin-bottom: 18px; color: var(--primary-color); font-size: 20px; line-height: 1.2; }
+.dev-grid { display: flex; gap: 28px; align-items: stretch; justify-content: flex-start; flex-wrap: nowrap; margin-top: 12px; }
+.dev-card {
+  /* Larger, more prominent cards that still fit three-per-row */
+  flex: 0 1 calc((100% - 56px) / 3);
+  max-width: calc((100% - 56px) / 3);
+  min-height: 220px;
+  padding: 28px;
+  border-radius: 14px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb),0.14), rgba(var(--secondary-rgb),0.08));
+  box-shadow: 0 20px 48px rgba(11,33,56,0.16);
+  border: 2px solid rgba(var(--accent-rgb),0.10);
+  color: var(--text-color);
+}
+.dev-card .dev-title { font-weight: 700; font-size: 18px; color: var(--primary-color); }
+.dev-card .dev-date { margin-top: 8px; font-size: 15px; color: var(--muted-color); }
+
+/* Conferences / Events / Clubs grid — two columns x four rows on wide screens */
+.conf-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-top: 12px;
+  align-items: start;
+}
+.conf-card {
+  min-height: 160px; /* reduced so two rows fit without excessive vertical space */
+  padding: 18px; /* tighter padding to reduce perceived card size */
+  border-radius: 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb),0.10), rgba(var(--secondary-rgb),0.06));
+  box-shadow: 0 12px 30px rgba(11,33,56,0.10);
+  border: 1px solid rgba(var(--accent-rgb),0.08);
+  color: var(--text-color);
+}
+.conf-card .conf-title { font-weight: 700; font-size: 16px; color: var(--primary-color); }
+.conf-card .conf-date { margin-top: 6px; font-size: 14px; color: var(--muted-color); }
+
+@media (max-width: 880px) {
+  .dev-grid { flex-wrap: wrap; }
+.vol-grid { display: flex; gap: 28px; align-items: stretch; justify-content: flex-start; margin-top: 14px; }
+.vol-card {
+  flex: 0 1 calc((100% - 56px) / 3);
+  max-width: calc((100% - 56px) / 3);
+  min-height: 160px;
+  padding: 20px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb),0.10), rgba(var(--secondary-rgb),0.06));
+  box-shadow: 0 12px 30px rgba(11,33,56,0.10);
+  border: 1px solid rgba(var(--accent-rgb),0.06);
+  color: var(--text-color);
+}
+.vol-card .vol-title { font-weight: 700; font-size: 16px; color: var(--primary-color); }
+.vol-card .vol-date { margin-top: 6px; font-size: 14px; color: var(--muted-color); }
+
+@media (max-width: 880px) {
+  .vol-grid { flex-direction: column; gap: 16px; }
+  .vol-card { flex: 1 1 100%; max-width: 100%; }
+}
+  .dev-card { flex: 1 1 100%; max-width: 100%; flex-direction: column; align-items: flex-start; }
+  .dev-card .dev-date { margin-left: 0; margin-top: 8px; white-space: normal; }
+  .conf-grid { grid-template-columns: 1fr; gap: 16px; }
+  .conf-card { width: 100%; }
+  .conf-card .conf-date { margin-top: 8px; }
+}
+
+html[data-theme="dark"] .dev-card {
+  background: rgba(var(--surface-dark-rgb,13,23,36),0.28);
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-color);
+}
+
+@keyframes floatPortrait {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-aside { animation: none !important; transition: none !important; }
+}
 
 .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 12px; }
 .project-item { padding: 16px; border-radius: 10px; background: var(--surface-color); box-shadow: 0 6px 18px rgba(18,24,33,0.05); border: 1px solid transparent; }
 /* Glass styling for project cards (applies consistently across pages) */
-.projects-grid .project-item,
-.project-item.glass-applied {
+.project-item.glass-applied,
+.projects-grid .project-item.glass-applied {
   background: rgba(var(--surface-rgb,170,188,189), 0.06);
   border: 1px solid rgba(var(--accent-rgb,37,75,138), 0.03);
   backdrop-filter: blur(10px) saturate(120%);
@@ -237,6 +475,17 @@ section { margin: 16px 0; }
 .project-item.glass-applied:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 48px rgba(11,33,56,0.12);
+}
+
+/* Ensure hovering a card never hides or disables its adjacent siblings.
+   This defensive override prevents accidental rules (or user-agent styles)
+   from making the next card transparent or non-interactive. */
+.projects-grid .project-item:hover + .project-item,
+.projects-grid .project-item.hover + .project-item,
+.projects-grid .project-item:focus-within + .project-item {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: none !important;
 }
 
 /* Make the whole card clickable while preserving its block layout */
@@ -317,10 +566,13 @@ section { margin: 16px 0; }
 
 /* Apply glass look to the visible faces so the whole rectangle appears frosted */
 .project-item .front, .project-item .back {
-  background: rgba(var(--surface-rgb), 0.06);
-  border: 1px solid rgba(var(--accent-rgb), 0.03);
+  /* Glassmorphism for card faces: translucent surface with blur + subtle border and shadow */
+  background: rgba(var(--surface-rgb,170,188,189), 0.08);
+  border: 1px solid rgba(var(--accent-rgb,37,75,138), 0.06);
+  box-shadow: 0 10px 36px rgba(11,33,56,0.06);
   backdrop-filter: blur(10px) saturate(120%);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
+  color: var(--primary-color);
 }
 
 /* Make project text color in light mode match the dark-mode project text color
@@ -330,7 +582,8 @@ section { margin: 16px 0; }
 .project-item .back,
 .project-item .front .inner,
 .project-item .back .inner {
-  color: #e6eef8;
+  /* Use the primary (dark) text color on project cards for legibility */
+  color: var(--primary-color);
 }
 
 /* Back content styling: center text vertically and horizontally and increase size */
@@ -338,9 +591,17 @@ section { margin: 16px 0; }
 .project-item .back .inner { width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 10px; }
 .project-item .back .inner p { margin: 0; font-size: 20px; line-height: 1.9; }
 
+/* Make back copy slightly larger and darker for readability */
+.project-item .back .inner p { color: var(--primary-color); font-size: 20px; }
+
 /* Front inner layout: center the logo/text in the middle of the card */
 .project-item .front .inner { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 100%; }
-.project-item .front .project-logo { width: 80%; height: auto; max-height: 260px; object-fit: contain; z-index: 3; position: relative; /* allow depth via CSS variable */ transform: translateZ(var(--logo-z,90px)); will-change: transform; }
+.project-item .front .project-logo { width: auto; max-width: 80%; height: auto; max-height: 260px; object-fit: contain; z-index: 3; position: relative; /* allow depth via CSS variable */ transform: translateZ(var(--logo-z,90px)); will-change: transform; margin: 0 auto; display: block; }
+
+/* Ensure logos are visually centered inside the front face (both axes). This
+  helps when an image file contains whitespace/padding so the visible mark
+  still appears centered. */
+.project-item .front .inner { align-items: center; justify-content: center; text-align: center; }
 
 @media (min-width: 1200px) {
   .project-item .front .project-logo { max-height: 300px; }
@@ -358,7 +619,7 @@ section { margin: 16px 0; }
     -webkit-overflow-scrolling: touch;
     padding-bottom: 12px;
     display: flex;
-    align-items: center; /* vertical center */
+    align-items: flex-start; /* allow cards to grow from the top */
     justify-content: center; /* horizontal center when content is narrower than the container */
     height: 100%;
   }
@@ -366,7 +627,7 @@ section { margin: 16px 0; }
     display: flex;
     flex-direction: row;
     gap: 20px;
-    align-items: center; /* vertical center cards */
+    align-items: flex-start; /* align cards to top so they can take full height */
     justify-content: center; /* center cards when they don't overflow */
     padding: 8px 6px;
     scroll-snap-type: x mandatory;
@@ -380,7 +641,7 @@ section { margin: 16px 0; }
     scroll-snap-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* distribute space so cards keep identical heights */
+    justify-content: flex-start; /* align card faces to top */
     padding: 0; /* move padding to card faces so the entire rectangle flips */
     background: transparent !important;
     border: none !important;
@@ -388,8 +649,12 @@ section { margin: 16px 0; }
     border-radius: 14px;
     align-self: center; /* ensure each card centers vertically */
     box-sizing: border-box;
-    height: 100%; /* fill the available panel height so cards match the rectangle */
+    height: auto; /* allow cards to size to their content */
+    min-height: 520px; /* ensure cards render large enough to show content on desktop */
   }
+
+  /* Ensure the inner flipping card fills the project-item area */
+  .projects-grid .project-item .card { height: 100%; min-height: 480px; }
   /* Remove visible project name text while keeping accessible markup if needed */
   .projects-grid .project-item h3 { display: none; }
   .projects-grid .project-item .project-logo { margin-bottom: 12px; }
@@ -417,6 +682,17 @@ section { margin: 16px 0; }
 }
 .project-logo { width: 100%; max-width: 220px; height: auto; margin: 0 auto 10px; display: block; }
 .project-item h3 { color: var(--secondary-color); text-align: center; margin-bottom: 8px; }
+
+/* Ensure logos render at full opacity and no unwanted filters */
+.project-item .project-logo { filter: none; opacity: 1; }
+
+/* Project item visual and sizing — matches debug outline placement.
+   (Removed temporary debug outline; these rules keep cards sized and placed.) */
+.projects-grid .project-item {
+  outline: none !important;
+  position: relative;
+  z-index: 2;
+}
 
 /* Forms */
 .inline-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -468,7 +744,73 @@ textarea { min-height: 120px; resize: vertical; }
   .surface h2 { margin-bottom: 28px; }
   .about-text { margin-top: 20px; }
    .about-text p { font-size: 20px; line-height: 1.95; margin-top: 14px; }
+  /* Increase spacing for subsection headings on wider screens */
+  .section-sub { margin-top: 44px; margin-bottom: 20px; }
 }
+
+/* Technical Skills section */
+.skills-section { margin-top: 36px; margin-bottom: 12px; }
+.skills-title { font-size: 36px; font-weight: 800; color: var(--primary-color); margin-bottom: 18px; }
+.skills-sub { margin-top: 18px; margin-bottom: 12px; color: var(--primary-color); font-size: 20px; }
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin-top: 12px; }
+.skill-card { padding: 24px; min-height: 140px; border-radius: 14px; 
+  /* Glass surface: translucent, subtle border and blur */
+  background: rgba(var(--surface-rgb,170,188,189), 0.06);
+  border: 1px solid rgba(var(--accent-rgb,31,58,107), 0.06);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 18px 42px rgba(11,33,56,0.12);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--text-color);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 180ms ease;
+}
+.skill-card img { width: 64px; height: 64px; object-fit: contain; display: block; }
+.skill-name { font-weight: 700; font-size: 18px; text-align: center; }
+.skill-meta { font-size: 14px; color: var(--muted-color); }
+
+@media (min-width: 1200px) {
+  .skills-title { font-size: 44px; }
+  .skill-card img { width: 72px; height: 72px; }
+  .skill-name { font-size: 20px; }
+  .skill-card { padding: 28px; min-height: 160px; }
+}
+
+/* Desktop: show 3 skill cards per row and make cards larger for prominence */
+@media (min-width: 880px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 18px;
+  }
+
+  .skill-card {
+    padding: 28px;
+    min-height: 180px;
+    border-radius: 14px;
+    box-shadow: 0 22px 48px rgba(11,33,56,0.14);
+  }
+
+  .skill-card img { width: 80px; height: 80px; }
+  .skill-name { font-size: 20px; }
+}
+
+/* Dark-theme adjustments for skill cards to ensure sufficient contrast */
+html[data-theme="dark"] .skill-card {
+  background: rgba(var(--surface-dark-rgb,13,23,36), 0.28);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  color: var(--text-color);
+}
+
+.skill-card:hover { transform: translateY(-6px); box-shadow: 0 26px 60px rgba(11,33,56,0.16); }
+
+@media (max-width: 880px) {
+  .skills-title { font-size: 28px; }
+  .skill-card { padding: 18px; min-height: 120px; }
+  .skill-card img { width: 48px; height: 48px; }
+}
+
+/* Add vertical spacing between consecutive skill grids when subtitles are removed */
+.skills-grid + .skills-grid { margin-top: 28px; }
 
 /* Make the theme toggle button visually minimal: no filled square behind the icon. */
 #themeToggle {
@@ -528,8 +870,8 @@ textarea { min-height: 120px; resize: vertical; }
   .form-row { flex-direction: column; }
   .profile-pic { width: 100%; max-width: 320px; }
   /* smaller framed portrait on mobile */
-  .about-aside { width: 220px; height: 220px; }
-  .about-aside .profile-small { transform: scale(1.02) translateY(-3%); }
+  .about-aside { width: 240px; height: 240px; padding: 6px; }
+  .about-aside .profile-small { transform: scale(1.01) translateY(-2%); }
 }
 
 /* Desktop adjustments: make portraits larger and more rectangular */
@@ -572,13 +914,14 @@ html[data-theme="dark"] {
   --muted-color: #9aa9bf;   /* muted */
   --primary-color: #bcd7ff; /* lighter primary for headings */
   --secondary-color: #9bbbe0;
-  --accent-color: #9b7bff;
+  /* Use the site's configured accent (rich cobalt) instead of purple */
+  --accent-color: #254B8A;
   --shadow: 0 10px 30px rgba(0,0,0,0.6);
 
   /* darker/desaturated RGB helpers for the blurred blobs */
   --primary-rgb: 36,48,66;
   --secondary-rgb: 64,84,120;
-  --accent-rgb: 90,66,160;
+  --accent-rgb: 37,75,138;
   --warm-rgb: 120,90,60;
 
   /* surface RGB for dark mode */
@@ -586,56 +929,43 @@ html[data-theme="dark"] {
 
   /* Dark-mode gradient stops (deeper blues) */
   --gradient-1: #0B2138; /* deep midnight */
-  --gradient-2: #12355A; /* deep navy */
-  --gradient-3: #254B8A; /* rich cobalt */
-  --gradient-4: #1E5FA8; /* deep blue accent */
+  --gradient-2: #001233; /* deep navy */
+  --gradient-3: #001d3d; /* rich cobalt */
+  --gradient-4: #001845; /* deep blue accent */
+}
+
+/* Make the nav underline lighter in dark mode so it remains visible against
+   dark backgrounds while keeping the light-mode appearance unchanged. */
+html[data-theme="dark"] .main-nav .nav-indicator {
+  background: var(--primary-color);
+}
+
+/* Explicit light-theme overrides — applied when <html data-theme="light"> is set.
+   This ensures the background gradients and surface colors visibly switch
+   when the user toggles the theme to light. */
+html[data-theme="light"] {
+  --background-color: #E9F0F6; /* cool pale background */
+  --surface-color: #F7FBFF; /* very light card surface */
+  --text-color: #052033;    /* dark navy text for readability */
+  --muted-color: #6B8496;   /* muted slate */
+  --primary-color: #052033; /* headings use deep navy */
+  --secondary-color: #0B3453;
+  --accent-color: #1F3A6B;
+  --shadow: 0 8px 24px rgba(6,16,28,0.08);
+
+  /* lighter gradient stops for clear light-mode background */
+  --gradient-1: #EAF6FB;
+  --gradient-2: #DDEFF8;
+  --gradient-3: #C9E5F4;
+  --gradient-4: #A7D3F0;
 }
 
 /* Dark-theme blob rules removed per user request. Will integrate CodePen snippet when provided. */
 
-/* Animated background dots (generated via JS) */
-:root {
-  /* light-mode: dots should be darker but visible (higher opacity for contrast) */
-  --dot-color: rgba(11,33,56,0.28);
-}
-
-html[data-theme="dark"] {
-  /* in dark mode, dots should be light and more visible */
-  --dot-color: rgba(255,255,255,0.30);
-}
-
-.bg-dots { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
-.bg-dots .dotWrapper { position: absolute; will-change: transform; }
-.bg-dots .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--dot-color); box-shadow: 0 0 10px color-mix(in srgb, var(--dot-color) 60%, transparent); opacity: 1; }
-
-@keyframes rotating {
-  0% { opacity: 0; transform: rotate(0deg); }
-  25%, 75% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 0; transform: rotate(360deg); }
-}
-
-@keyframes flying {
-  0% { transform: translate(0, 0); }
-  10% { transform: translate(20px, 50px); }
-  20% { transform: translate(-30px, 10px); }
-  30% { transform: translate(10px, 60px); }
-  40% { transform: translate(50px, 0); }
-  50% { transform: translate(-10px, -40px); }
-  60% { transform: translate(-40px, 20px); }
-  70% { transform: translate(30px, -30px); }
-  80% { transform: translate(0px, -60px); }
-  90% { transform: translate(40px, 10px); }
-  100% { transform: translate(0, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bg-dots .dotWrapper, .bg-dots .dot { animation: none !important; }
-}
+/* Removed animated dot stylesheet and keyframes (particles/dots no longer used). */
 
 /* Ensure surfaces have enough contrast in dark mode */
 html[data-theme="dark"] .glass-applied,
-html[data-theme="dark"] .project-item,
 html[data-theme="dark"] .stats-card {
   background: rgba(var(--surface-dark-rgb, 13,23,36), 0.32);
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -678,5 +1008,47 @@ html[data-theme="dark"] .btn.ghost { background: transparent; color: var(--text-
 @media (min-width: 880px) {
   .resume-header h2 { font-size: 34px; }
   .resume-section p, .resume-section li { font-size: 18px; }
+}
+
+/* Strong override: enforce a single continuous page background
+   Remove any per-section panel painting that can produce a visible seam
+   when scrolling (borders, box-shadows, backdrop-filter). This keeps the
+   animated `body` gradient and JS-decorations as the single background. */
+main, body, html { background-attachment: fixed; }
+main > .surface,
+main > .surface > .container,
+section.surface,
+section.surface > .container,
+section > .container,
+section {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Also neutralize any glass-applied class on section-level elements */
+section.glass-applied,
+section > .container.glass-applied,
+main > .surface > .container.glass-applied {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Abstract wave canvas overlay (keeps existing page background intact) */
+#canv {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none; /* do not intercept clicks */
+  z-index: -1; /* behind foreground content but above the page background */
+  display: block;
+  background: transparent;
 }
 

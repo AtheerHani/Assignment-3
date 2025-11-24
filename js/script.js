@@ -3,9 +3,6 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-
-
-
 /* Parallax tilt + floating depth for project cards */
 (function projectParallaxInit() {
   const items = $$('.project-item');
@@ -199,20 +196,49 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   links.forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
-      if (!href || href.startsWith('#')) return;
+      if (!href) return;
+
+      // If this is an in-page hash link, animate the indicator and smoothly
+      // scroll to the section instead of navigating away. Update history
+      // so the hash reflects the target.
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        placeIndicator(link, true);
+        const target = document.querySelector(href);
+        // small delay so the underline moves first, then scroll
+        setTimeout(() => {
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          try { history.pushState(null, '', href); } catch (err) { location.hash = href; }
+        }, 120);
+        active = link;
+        return;
+      }
+
+      // External or cross-page navigation: keep previous behavior
       e.preventDefault();
-      // move indicator visually
       placeIndicator(link, true);
-      // navigate after animation completes (short delay)
       setTimeout(() => { window.location.href = href; }, 280);
     });
+  });
+
+  // Move the underline on hover and keep it where it was last hovered.
+  // Do not auto-restore to the page-active link on mouseleave — keep the
+  // underline positioned at the most recently hovered nav item until the
+  // user hovers another link or clicks one.
+  let lastHovered = null;
+  links.forEach(l => {
+    l.addEventListener('mouseenter', () => {
+      placeIndicator(l, true);
+      lastHovered = l;
+    });
+    // intentionally no mouseleave handler — leave underline where last hovered
   });
 
   // reposition on resize (no animation)
   let resizeTO;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTO);
-    resizeTO = setTimeout(() => placeIndicator(active, false), 120);
+    resizeTO = setTimeout(() => placeIndicator(lastHovered || active, false), 120);
   });
 
   // if user navigates via history buttons, update active
@@ -225,153 +251,115 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 })();
 
 /* Background decorations: blobs, SVG shapes, and small particles */
+// Recreate background for About page: remove any previous background elements
+// and inject a single clean instance. This function is idempotent for the
+// current page.
 (function backgroundDecorInit() {
-  // Respect reduced motion
-  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  try {
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Create container
-  const decor = document.createElement('div');
-  decor.className = 'bg-decor';
-  document.body.appendChild(decor);
+    // Only operate on the About page to match the user's request
+    const page = window.location.pathname.split('/').pop() || 'index.html';
+    if (!['about.html', 'index.html', ''].includes(page)) return;
 
-  // Create blobs
-  const blobColors = [
-    getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#254B8A',
-    getComputedStyle(document.documentElement).getPropertyValue('--secondary-color') || '#12355A',
-    getComputedStyle(document.documentElement).getPropertyValue('--success-color') || '#1E5FA8',
-    getComputedStyle(document.documentElement).getPropertyValue('--primary-color') || '#0B2138'
-  ];
+    // Remove any previously injected background elements to ensure a single
+    // background instance (prevents layering/seams).
+    document.querySelectorAll('.bg-decor, #particles-js, .bg-dots').forEach(el => el.remove());
 
-  for (let i = 0; i < 4; i++) {
-    const b = document.createElement('div');
-    b.className = `blob blob-${i+1}`;
-    b.style.background = blobColors[i].trim() || blobColors[i];
-    if (prefersReduced) b.style.animation = 'none';
-    decor.appendChild(b);
+    // Create container
+    const decor = document.createElement('div');
+    decor.className = 'bg-decor';
+    document.body.appendChild(decor);
+
+    // Blob colors from CSS variables (darken slightly so blobs aren't too bright)
+    const _rawBlobColors = [
+      getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#254B8A',
+      getComputedStyle(document.documentElement).getPropertyValue('--secondary-color') || '#12355A',
+      getComputedStyle(document.documentElement).getPropertyValue('--success-color') || '#1E5FA8',
+      getComputedStyle(document.documentElement).getPropertyValue('--primary-color') || '#0B2138'
+    ];
+
+    // utility: darken hex or rgb(a) color strings by a fractional amount (0..1)
+    function darkenColor(col, amount = 0.6) {
+      if (!col) return col;
+      col = col.trim();
+      // rgb/rgba
+      const rgbMatch = col.match(/rgba?\(([^)]+)\)/);
+      if (rgbMatch) {
+        const parts = rgbMatch[1].split(',').map(p => p.trim());
+        let r = Math.round(parseFloat(parts[0]) * (1 - amount));
+        let g = Math.round(parseFloat(parts[1]) * (1 - amount));
+        let b = Math.round(parseFloat(parts[2]) * (1 - amount));
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+      // hex #rrggbb
+      const hexMatch = col.match(/^#([0-9a-f]{6})/i);
+      if (hexMatch) {
+        const hex = hexMatch[1];
+        const r = parseInt(hex.slice(0,2),16);
+        const g = parseInt(hex.slice(2,4),16);
+        const b = parseInt(hex.slice(4,6),16);
+        const nr = Math.max(0, Math.min(255, Math.round(r * (1 - amount))));
+        const ng = Math.max(0, Math.min(255, Math.round(g * (1 - amount))));
+        const nb = Math.max(0, Math.min(255, Math.round(b * (1 - amount))));
+        return `rgb(${nr}, ${ng}, ${nb})`;
+      }
+      // fallback: return original
+      return col;
+    }
+
+    // Use explicit navy-leaning colors for the blobs so they read as deep
+    // navy tones (not greys) on the dark background. These are darker
+    // hex values chosen to match the site's palette while avoiding light
+    // or purple tints.
+    const blobColors = [
+      '#0A2A47', // deep navy (variant of secondary)
+      '#071427', // midnight navy (very dark)
+      '#042037', // teal-navy mix for depth
+      '#061A2B'  // dark slate navy (near-primary)
+    ];
+
+    // Decorative blobs removed per user request: do not inject blob DOM elements.
+    // Intentionally skip creation of `.blob` elements so the background is clean.
+
+    // SVG shapes removed — keep background blobs and particles only.
+    // (The rotating central SVG shapes were removed per user request.)
+
+    // Particles/dot field removed: no DOM injection for particles or animated dots.
+    // This block intentionally left empty to keep backgroundDecorInit focused on blobs only.
+
+    // Ensure no section-level glass is applied so background remains continuous
+    document.querySelectorAll('section, section > .container, main > .surface > .container').forEach(el => el.classList.remove('glass-applied'));
+
+    // Apply glass only to small UI elements (do NOT apply to whole project-item wrappers)
+    document.querySelectorAll('.stats-card').forEach(el => el.classList.add('glass-applied'));
+
+    // mark initialized to avoid duplicate runs
+    try { document.documentElement.dataset.bgInitialized = '1'; } catch (e) { /* ignore */ }
+  } catch (e) {
+    console.error('backgroundDecorInit error', e);
   }
+})();
 
-  // Inject a few SVG shapes for subtle geometry
-  const svgPaths = [
-    { fill: blobColors[0], rotate: 0 },
-    { fill: blobColors[1], rotate: 120 },
-    { fill: blobColors[2], rotate: 240 }
-  ];
-  svgPaths.forEach((s, idx) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'svg-shape';
-    wrapper.style.inset = '0';
-    wrapper.style.position = 'absolute';
-    wrapper.style.width = '100%';
-    wrapper.style.height = '100%';
-    wrapper.style.zIndex = '-3';
-    wrapper.innerHTML = `<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><path fill="${s.fill.trim()}" d="M800,500Q700,600,600,650Q500,700,400,650Q300,600,200,500Q100,400,150,300Q200,200,300,150Q400,100,500,150Q600,200,650,300Q700,400,800,500Z" transform="rotate(${s.rotate} 500 500)"/></svg>`;
-    if (prefersReduced) wrapper.style.animation = 'none';
-    decor.appendChild(wrapper);
-  });
-
-  // Particles (small dots)
-  const particles = document.createElement('div');
-  particles.id = 'particles-js';
-  document.body.appendChild(particles);
-
-  if (!prefersReduced) {
-    const count = 50;
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      const size = Math.random() * 4 + 1; // 1..5
-      p.style.width = `${size}px`;
-      p.style.height = `${size}px`;
-      p.style.left = `${Math.random() * 100}%`;
-      p.style.top = `${Math.random() * 100}%`;
-      p.style.opacity = String(0.08 + Math.random() * 0.18);
-      const dur = 12 + Math.random() * 20;
-      const delay = Math.random() * 8;
-      p.style.animation = `floatParticle ${dur}s ease-in-out ${delay}s infinite`;
-      particles.appendChild(p);
-    }
-
-    // Add floatParticle keyframes dynamically so each run uses consistent values
-    const style = document.createElement('style');
-    style.textContent = `@keyframes floatParticle { 0%{transform:translate(0,0);} 25%{transform:translate(20px,-12px);}50%{transform:translate(-10px,18px);}75%{transform:translate(6px,6px);}100%{transform:translate(0,0);} }`;
-    document.head.appendChild(style);
+/* Starfield (3D particles) — generate at runtime from JS so we can use
+   randomized box-shadow similar to the provided CodePen SCSS. This keeps
+   the site's gradient background intact and avoids setting `overflow:hidden`.
+   Parameters mirror the CodePen: stars, depth, speed, width, height. */
+// Replace previous starfield with an implementation that mirrors the
+// provided CodePen SCSS/HTML exactly (stars, depth, speed, width, height)
+// The implementation builds the large box-shadow list in JS and injects
+// CSS that uses the original keyframe names `fly`, `fade1`, and `fade2`.
+// Remove any injected starfield/styles and keep the site's gradient + scrolling.
+(function codepenStarfield() {
+  try {
+    // remove any previously injected style blocks and DOM nodes from earlier runs
+    document.querySelectorAll('style[data-generated-by^="codepen-starfield"]').forEach(s => s.remove());
+    document.querySelectorAll('.stars, .stars-wrap').forEach(el => el.remove());
+    // intentionally do not inject any starfield so the background stays the gradient
+    return;
+  } catch (err) {
+    console.error('codepenStarfield cleanup error', err);
   }
-
-  // Animated dot field (CodePen-inspired) — generate wrappers + tiny dots
-  const dotsContainer = document.createElement('div');
-  dotsContainer.className = 'bg-dots';
-  document.body.appendChild(dotsContainer);
-
-  // Increase dots for a denser field; be mindful of performance on low-end devices
-  const dotsCount = 220;
-  if (prefersReduced) {
-    // create a reduced, static set for users who prefer less motion
-    for (let i = 0; i < 16; i++) {
-      const w = document.createElement('div');
-      w.className = `dotWrapper dotWrapper-${i+1}`;
-      w.style.top = `${Math.random() * 100}%`;
-      w.style.left = `${Math.random() * 100}%`;
-      const d = document.createElement('div');
-      d.className = `dot dot-${i+1}`;
-      const size = Math.round(2 + Math.random() * 4);
-      d.style.width = `${size}px`;
-      d.style.height = `${size}px`;
-      d.style.background = 'var(--dot-color)';
-      w.appendChild(d);
-      dotsContainer.appendChild(w);
-    }
-  } else {
-    for (let i = 0; i < dotsCount; i++) {
-      const w = document.createElement('div');
-      w.className = `dotWrapper dotWrapper-${i+1}`;
-      w.style.top = `${Math.random() * 100}%`;
-      w.style.left = `${Math.random() * 100}%`;
-      // flying duration between ~20s and ~70s, random negative delay for natural staggering
-      const flyDur = 20 + Math.random() * 50;
-      const flyDelay = -(Math.random() * 10);
-      w.style.animation = `flying ${flyDur}s ease-in-out ${flyDelay}s infinite alternate`;
-
-      const d = document.createElement('div');
-      d.className = `dot dot-${i+1}`;
-      const size = (Math.random() * 3) + 2; // 2..5px
-      d.style.width = `${size}px`;
-      d.style.height = `${size}px`;
-      // rotating duration between 10s and 30s
-      const rotDur = 10 + Math.random() * 20;
-      const rotDelay = -(Math.random() * 10);
-      d.style.animation = `rotating ${rotDur}s ease-in-out ${rotDelay}s infinite`;
-      // random transform-origin to make rotations feel organic
-      const ox = Math.round((Math.random() * 30) - 15) + 'px';
-      const oy = Math.round((Math.random() * 30) - 15) + 'px';
-      d.style.transformOrigin = `${ox} ${oy}`;
-      d.style.background = 'var(--dot-color)';
-
-      w.appendChild(d);
-      dotsContainer.appendChild(w);
-    }
-  }
-
-  // Ensure glass overlay is applied to inner containers (not full-width sections)
-  // Remove accidental application on full-width sections if present
-  document.querySelectorAll('section').forEach(s => s.classList.remove('glass-applied'));
-
-  // Apply glass style to section's inner `.container` where available
-  document.querySelectorAll('section').forEach(section => {
-    const inner = section.querySelector('.container');
-    if (!inner) return;
-    // Skip applying the full-panel glass on the Projects page so individual cards
-    // can present as the single frosted rectangle that flips.
-    const page = window.location.pathname.split('/').pop();
-    if (page === 'projects.html') {
-      // do not add glass-applied to the section inner on projects page
-    } else {
-      inner.classList.add('glass-applied');
-    }
-  });
-
-  // Also apply to project cards and stats cards themselves
-  document.querySelectorAll('.project-item, .stats-card').forEach(el => el.classList.add('glass-applied'));
-
 })();
 
 /* Header: mobile nav toggle and theme toggle placeholder */
@@ -428,9 +416,12 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   function detectPreferredTheme() {
     const stored = getStoredTheme();
     if (stored) return stored;
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-    return 'light';
+    // Default to dark mode when the user has not previously selected a preference.
+    // This makes the site load in dark mode by default; pressing the theme
+    // button will switch to light and store the preference.
+    return 'dark';
   }
+
 
   // Navigation toggle for small screens
   if (navToggle && nav) {
@@ -727,4 +718,138 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     // small delay so page feels settled
     setTimeout(() => type(el, text, speed), 120 + idx * 220);
   });
+})();
+
+
+(function scrollRevealInit() {
+  try {
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Abstract wave canvas overlay: injects #canv and draws an animated wave on top of
+   the existing animated gradient background. Uses CSS `--accent-color` and adapts
+   alpha for light/dark themes. Non-interactive and preserves page scrolling. */
+(function abstractWaveCanvas(){
+  if (typeof window === 'undefined') return;
+
+  // Avoid creating multiple canvases if script re-runs
+  if (document.getElementById('canv')) return;
+
+  var canv = document.createElement('canvas');
+  canv.id = 'canv';
+  canv.className = 'canvas';
+  canv.setAttribute('data-bgcolor', 'transparent');
+  document.body.appendChild(canv);
+
+  var ctx = canv.getContext('2d');
+
+  function getCSSAccentColor(alpha){
+    var cs = getComputedStyle(document.documentElement);
+    // Prefer a lighter gradient stop when the page is in light mode
+    var isLightTheme = document.documentElement.getAttribute('data-theme') === 'light';
+    var hex = (isLightTheme
+      ? (cs.getPropertyValue('--gradient-3') || cs.getPropertyValue('--accent-color'))
+      : (cs.getPropertyValue('--accent-color') || cs.getPropertyValue('--gradient-3')) || '#1F3A6B'
+    ).trim();
+    // Normalize hex and convert to rgba
+    function hexToRgba(h, a){
+      h = h.replace('#','');
+      if (h.length === 3) h = h.split('').map(function(x){ return x + x; }).join('');
+      var r = parseInt(h.substr(0,2),16);
+      var g = parseInt(h.substr(2,2),16);
+      var b = parseInt(h.substr(4,2),16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + (a == null ? 1 : a) + ')';
+    }
+    return hexToRgba(hex, alpha);
+  }
+
+  // Responsive pixel scaling
+  var cssWidth = window.innerWidth;
+  var cssHeight = window.innerHeight;
+  var dpr = window.devicePixelRatio || 1;
+
+  function resize(){
+    cssWidth = window.innerWidth;
+    cssHeight = window.innerHeight;
+    dpr = window.devicePixelRatio || 1;
+    canv.style.width = cssWidth + 'px';
+    canv.style.height = cssHeight + 'px';
+    canv.width = Math.max(1, Math.floor(cssWidth * dpr));
+    canv.height = Math.max(1, Math.floor(cssHeight * dpr));
+    // Reset transform so drawing coordinates match CSS pixels
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // Initial resize
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  var t = 0;
+
+  function draw(){
+    // Clear with transparent so page background shows through
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    // Slightly higher contrast in light mode — increase alpha so wave shows up better
+    var alphaBase = isLight ? 0.26 : 0.08;
+    // Slightly thicker strokes in light mode to improve visibility
+    var baseLineWidth = isLight ? 1.2 : 0.8;
+
+    for (var i = -60; i < 60; i += 1) {
+      var alpha = alphaBase * (1 - Math.abs(i) / 120); // central lines slightly stronger
+      ctx.strokeStyle = getCSSAccentColor(alpha);
+      ctx.lineWidth = baseLineWidth;
+      ctx.beginPath();
+      ctx.moveTo(0, cssHeight / 2);
+      for (var j = 0; j < cssWidth; j += 10) {
+        var x = 10 * Math.sin(i / 10) + j + 0.008 * j * j;
+        var y = Math.floor(cssHeight / 2 + j / 2 * Math.sin(j / 50 - t / 50 - i / 118) + (i * 0.9) * Math.sin(j / 25 - (i + t) / 65));
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function loop(){
+    t += 1;
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // Start animation. Canvas is non-blocking and preserves page scroll.
+  requestAnimationFrame(loop);
+})();
+
+    // selectors to target for reveal. Add/remove selectors as needed.
+    const selectors = [
+      'section', '.hero-inner', '.about-text', '.about-aside', '.dev-card', '.conf-card', '.vol-card', '.skill-card', '.project-item', '.projects-grid', '.profile-pic', '.typewriter', '.btn'
+    ];
+
+    // gather unique elements
+    const elems = Array.from(new Set(selectors.flatMap(s => Array.from(document.querySelectorAll(s)))));
+    if (!elems.length) return;
+
+    // If user prefers reduced motion, just make elements visible immediately
+    if (prefersReduced) {
+      elems.forEach(el => el.classList.add('reveal-visible'));
+      return;
+    }
+
+    // add starting class so CSS hides them until revealed
+    elems.forEach(el => el.classList.add('reveal'));
+
+    const obs = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+    elems.forEach(el => obs.observe(el));
+  } catch (e) {
+    // fail silently
+    console.error('scrollRevealInit error', e);
+  }
 })();
