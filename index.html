@@ -8,8 +8,80 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="assets/images/new favicon.png" sizes="32x32" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <style>
+      /* Theme-aware button shadow for contact form */
+      html[data-theme="dark"] #contactForm button {
+        box-shadow: 0 4px 12px rgba(255,255,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.08) !important;
+      }
+      html[data-theme="light"] #contactForm button {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(0,0,0,0.1) !important;
+        color: #052033 !important;
+      }
+
+      /* Success Modal */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(0.5px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: rgba(64, 168, 198, 0.75);
+        border: 3px solid #40A8C6;
+        border-radius: 16px;
+        padding: 40px 60px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-content.dismiss {
+        animation: modalSlideOut 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: scale(0) translate(-50%, -50%);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translate(0, 0);
+        }
+      }
+
+      @keyframes modalSlideOut {
+        from {
+          opacity: 1;
+          transform: scale(1) translate(0, 0);
+        }
+        to {
+          opacity: 0;
+          transform: scale(0) translate(-50%, -50%);
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay">
+      <div class="modal-content">Message Sent!</div>
+    </div>
     <header class="site-header">
       <div class="container header-inner">
         <div class="brand">
@@ -24,6 +96,7 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="https://drive.google.com/file/d/1LNomcl1u52aR5kXZlxRKuhoeizgB9JxH/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Resume</a></li>
           </ul>
         </nav>
 
@@ -234,31 +307,31 @@
           <div class="contact-section-wrapper" style="display: flex; gap: 40px; align-items: flex-start;">
             
             <!-- LEFT COLUMN: Contact Form -->
-            <div class="contact-wrapper" style="flex: 1 1 400px; min-width: 300px;">
-              <div class="contact-card" style="position:relative; border-radius:14px; padding:28px; background:rgba(13,23,36,0.28) !important; border:1px solid rgba(255,255,255,0.04) !important; box-shadow:0 18px 42px rgba(11,33,56,0.12) !important; backdrop-filter:blur(8px) saturate(120%) !important; -webkit-backdrop-filter:blur(8px) saturate(120%) !important;">
-                <div class="contact-head" style="margin-bottom:24px;">
-                  <h2 style="color:var(--text-color);">Contact Me</h2>
+            <div class="contact-wrapper" style="flex: 2 1 450px; min-width: 450px;">
+              <div class="contact-card" style="position:relative; border-radius:14px; padding:60px 48px; background:rgba(13,23,36,0.28) !important; border:1px solid rgba(255,255,255,0.04) !important; box-shadow:0 18px 42px rgba(11,33,56,0.12) !important; backdrop-filter:blur(8px) saturate(120%) !important; -webkit-backdrop-filter:blur(8px) saturate(120%) !important;">
+                <div class="contact-head" style="margin-bottom:36px;">
+                  <h2 style="color:var(--text-color); font-size:40px;">Contact Me</h2>
                 </div>
 
                 <form id="contactForm" class="contact-form" novalidate>
-                  <div class="form-row" style="display:flex; gap:12px; flex-wrap:wrap;">
+                  <div class="form-row" style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
                     <div style="flex:1 1 240px; min-width:180px;">
-                      <label for="name">Your Name</label>
-                      <input id="name" name="name" type="text" required placeholder="e.g. Atheer Almomtin" style="width:100%; padding:12px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent;" />
+                      <label for="name" style="font-size:18px; margin-bottom:12px;">Your Name</label>
+                      <input id="name" name="name" type="text" required placeholder="e.g. Atheer Almomtin" style="width:100%; padding:14px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent; font-size:16px;" />
                     </div>
                     <div style="flex:1 1 240px; min-width:180px;">
-                      <label for="email">Your Email</label>
-                      <input id="email" name="email" type="email" required placeholder="email@example.com" style="width:100%; padding:12px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent;" />
+                      <label for="email" style="font-size:18px; margin-bottom:12px;">Your Email</label>
+                      <input id="email" name="email" type="email" required placeholder="email@example.com" style="width:100%; padding:14px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent; font-size:16px;" />
                     </div>
                   </div>
 
-                  <div style="margin-top:12px;">
-                    <label for="message">Your Message</label>
-                    <textarea id="message" name="message" rows="5" required placeholder="Feel free to reach out regarding any matter!" style="width:100%; padding:12px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent; resize:none;"></textarea>
+                  <div style="margin-bottom:24px;">
+                    <label for="message" style="font-size:18px; margin-bottom:12px; display:block;">Your Message</label>
+                    <textarea id="message" name="message" rows="8" required placeholder="Feel free to reach out regarding any matter!" style="width:100%; padding:14px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent; resize:none; font-size:16px;"></textarea>
                   </div>
 
-                  <div style="margin-top:16px;">
-                    <button type="submit" class="btn">Send</button>
+                  <div style="margin-top:28px;">
+                    <button type="submit" class="btn" style="font-size:18px; padding:14px 32px; background:transparent; border:none; color:#fff; cursor:pointer; transition:all 0.3s ease; box-shadow:0 4px 12px rgba(255,255,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.08);">Send</button>
                   </div>
                 </form>
               </div>

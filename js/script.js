@@ -196,7 +196,13 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   links.forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
+      const target = link.getAttribute('target');
       if (!href) return;
+
+      // If link has target="_blank", don't intercept - let browser handle it
+      if (target === '_blank') {
+        return; // allow default behavior
+      }
 
       // If this is an in-page hash link, animate the indicator and smoothly
       // scroll to the section instead of navigating away. Update history
@@ -204,10 +210,10 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
       if (href.startsWith('#')) {
         e.preventDefault();
         placeIndicator(link, true);
-        const target = document.querySelector(href);
+        const targetEl = document.querySelector(href);
         // small delay so the underline moves first, then scroll
         setTimeout(() => {
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
           try { history.pushState(null, '', href); } catch (err) { location.hash = href; }
         }, 120);
         active = link;
@@ -533,8 +539,24 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
       console.log('Form submitted:', data);
     } catch (e) { /* ignore logging errors */ }
     
-    showPopup('✅ Message sent! Thanks for reaching out.');
-    form.reset();
+    // Show success modal
+    const modal = document.getElementById('successModal');
+    if (modal) {
+      const modalContent = modal.querySelector('.modal-content');
+      modal.classList.add('active');
+      modalContent.classList.remove('dismiss');
+      form.reset();
+      // Auto-dismiss after 1.5 seconds
+      setTimeout(() => {
+        modalContent.classList.add('dismiss');
+        setTimeout(() => {
+          modal.classList.remove('active');
+        }, 400);
+      }, 1500);
+    } else {
+      showPopup('✅ Message sent! Thanks for reaching out.');
+      form.reset();
+    }
   });
 })();
 
@@ -906,7 +928,6 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   function init() {
     scene = new THREE.Scene();
     scene.background = null;
-    scene.fog = new THREE.Fog(0x000000, 10, 15);
 
     camera = new THREE.PerspectiveCamera(60, gameDiv.clientWidth / gameDiv.clientHeight, 0.1, 1000);
     camera.position.z = 5;
@@ -917,18 +938,20 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     renderer.shadowMap.enabled = true;
     gameDiv.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Professional lighting setup (CodePen style)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(10, 10, 10);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
+    directionalLight.position.set(8, 8, 8);
     directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
     scene.add(directionalLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 0.4);
-    pointLight.position.set(-10, -10, 10);
-    scene.add(pointLight);
+    const backLight = new THREE.DirectionalLight(0xffffff, 0.35);
+    backLight.position.set(-8, -6, -8);
+    scene.add(backLight);
 
     // Create Rubik's cube
     rubiksCube = createRubiksCube();
@@ -948,7 +971,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
   function createRubiksCube() {
     const cubeGroup = new THREE.Group();
-    const PIECE_SIZE = 0.65;
+    const PIECE_SIZE = 0.75;
     const GAP = 0.09;
     const UNIT = PIECE_SIZE + GAP;
 
@@ -969,98 +992,60 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   function createCubePiece(size, posX, posY, posZ) {
     const group = new THREE.Group();
     
-    // Create geometry with proper spacing
-    const geometry = new THREE.BoxGeometry(size, size, size);
+    // Create simple box geometry for clean colors
+    const geometry = new THREE.BoxGeometry(size, size, size, 2, 2, 2);
     
     // Create materials for each face
     const materials = [];
     
+    const getMaterial = (color) => {
+      return new THREE.MeshPhongMaterial({
+        color: color,
+        shininess: 120,
+        flatShading: false,
+        side: THREE.FrontSide
+      });
+    };
+    
     // Right face (X+)
-    materials.push(new THREE.MeshPhongMaterial({ 
-      color: posX > 0 ? COLORS.blue : 0x1a1a1a,
-      shininess: 100,
-      flatShading: false,
-      metalness: 0.3,
-      roughness: 0.4
-    }));
+    materials.push(getMaterial(posX > 0 ? COLORS.blue : 0x0f0f0f));
     
     // Left face (X-)
-    materials.push(new THREE.MeshPhongMaterial({ 
-      color: posX < 0 ? COLORS.green : 0x1a1a1a,
-      shininess: 100,
-      flatShading: false,
-      metalness: 0.3,
-      roughness: 0.4
-    }));
+    materials.push(getMaterial(posX < 0 ? COLORS.green : 0x0f0f0f));
     
     // Top face (Y+)
-    materials.push(new THREE.MeshPhongMaterial({ 
-      color: posY > 0 ? COLORS.white : 0x1a1a1a,
-      shininess: 100,
-      flatShading: false,
-      metalness: 0.3,
-      roughness: 0.4
-    }));
+    materials.push(getMaterial(posY > 0 ? COLORS.white : 0x0f0f0f));
     
     // Bottom face (Y-)
-    materials.push(new THREE.MeshPhongMaterial({ 
-      color: posY < 0 ? COLORS.yellow : 0x1a1a1a,
-      shininess: 100,
-      flatShading: false,
-      metalness: 0.3,
-      roughness: 0.4
-    }));
+    materials.push(getMaterial(posY < 0 ? COLORS.yellow : 0x0f0f0f));
     
     // Front face (Z+)
-    materials.push(new THREE.MeshPhongMaterial({ 
-      color: posZ > 0 ? COLORS.red : 0x1a1a1a,
-      shininess: 100,
-      flatShading: false,
-      metalness: 0.3,
-      roughness: 0.4
-    }));
+    materials.push(getMaterial(posZ > 0 ? COLORS.red : 0x0f0f0f));
     
     // Back face (Z-)
-    materials.push(new THREE.MeshPhongMaterial({ 
-      color: posZ < 0 ? COLORS.orange : 0x1a1a1a,
-      shininess: 100,
-      flatShading: false,
-      metalness: 0.3,
-      roughness: 0.4
-    }));
+    materials.push(getMaterial(posZ < 0 ? COLORS.orange : 0x0f0f0f));
 
     const mesh = new THREE.Mesh(geometry, materials);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
+    
+    // Apply slight rounding through scale and smooth shading
+    mesh.geometry.computeVertexNormals();
+    
     group.add(mesh);
 
-    // Add thick black borders around each cubelet
+    // Add bold black edges for clear definition
     const edges = new THREE.EdgesGeometry(geometry);
-    const lineWidth = size * 0.15;
-    
-    // Create thick black border using LineSegments with higher resolution
     const line = new THREE.LineSegments(
       edges,
       new THREE.LineBasicMaterial({ 
-        color: 0x000000, 
-        linewidth: 3,
+        color: 0x000000,
         fog: false
       })
     );
-    line.position.z += 0.001; // Slight offset to prevent z-fighting
+    // Scale up slightly for thicker appearance
+    line.position.z += 0.0001;
     group.add(line);
-
-    // Add an additional outline for extra definition
-    const outlineGeometry = new THREE.EdgesGeometry(geometry);
-    const outline = new THREE.LineSegments(
-      outlineGeometry,
-      new THREE.LineBasicMaterial({
-        color: 0x000000,
-        linewidth: 2
-      })
-    );
-    outline.scale.set(1.02, 1.02, 1.02); // Slightly larger for visible outline effect
-    group.add(outline);
 
     return group;
   }
