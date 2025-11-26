@@ -403,6 +403,15 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
       }
       themeToggle.classList.toggle('is-dark', name === 'dark');
     }
+    // Swap project logos when a theme change occurs if light/dark variants are provided.
+    try {
+      document.querySelectorAll('.project-logo[data-light-src]').forEach(imgEl => {
+        const lightSrc = imgEl.getAttribute('data-light-src');
+        const darkSrc = imgEl.getAttribute('data-dark-src') || imgEl.getAttribute('data-dark') || imgEl.getAttribute('src');
+        if (name === 'light' && lightSrc) imgEl.src = lightSrc;
+        else if (darkSrc) imgEl.src = darkSrc;
+      });
+    } catch (e) { /* ignore if DOM not ready */ }
   }
 
   function getStoredTheme() {
@@ -469,7 +478,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   if (y) y.textContent = new Date().getFullYear();
 })();
 
-/* Contact Form Validation */
+/* Contact Form Validation with Popup Notifications */
 (function contactFormInit() {
   const form = $('#contact form');
   if (!form) return;
@@ -478,40 +487,54 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const email = $('#email');
   const message = $('#message');
 
-  const nameErr = $('#nameError');
-  const emailErr = $('#emailError');
-  const msgErr = $('#messageError');
-
-  const statusEl = $('#formStatus');
-
   const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  const setError = (input, errEl, msg) => {
-    errEl.textContent = msg || '';
-    msg ? input.setAttribute('aria-invalid', 'true') : input.removeAttribute('aria-invalid');
+  const showPopup = (msg) => {
+    // Remove existing popup if any
+    const existing = form.querySelector('.form-popup');
+    if (existing) existing.remove();
+
+    const popup = document.createElement('div');
+    popup.className = 'form-popup';
+    popup.textContent = msg;
+    form.parentElement.insertBefore(popup, form);
+
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+      popup.classList.add('fade-out');
+      setTimeout(() => popup.remove(), 200);
+    }, 3000);
   };
 
   form.addEventListener('submit', e => {
     e.preventDefault();
     let ok = true;
+    let errorMsg = '';
 
-    if (!name.value.trim()) { setError(name, nameErr, 'Name is required.'); ok = false; }
-    else setError(name, nameErr, '');
+    // Check if any field is empty
+    if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
+      errorMsg = 'Please fill the required fields';
+      ok = false;
+    }
+    // Check email validity if fields are filled
+    else if (!isEmail(email.value.trim())) {
+      errorMsg = 'Please enter a valid Email';
+      ok = false;
+    }
 
-    const em = email.value.trim();
-    if (!em) { setError(email, emailErr, 'Email is required.'); ok = false; }
-    else if (!isEmail(em)) { setError(email, emailErr, 'Enter a valid email.'); ok = false; }
-    else setError(email, emailErr, '');
+    if (!ok) {
+      showPopup(errorMsg);
+      return;
+    }
 
-    if (!message.value.trim()) { setError(message, msgErr, 'Message cannot be empty.'); ok = false; }
-    else setError(message, msgErr, '');
-
-    statusEl.hidden = false;
-    statusEl.textContent = ok ?
-      '✅ Message sent! Thanks for reaching out.' :
-      'Please fix the errors above.';
-
-    if (ok) form.reset();
+    // Form is valid - submit
+    try {
+      const data = { name: name.value.trim(), email: email.value.trim(), message: message.value.trim() };
+      console.log('Form submitted:', data);
+    } catch (e) { /* ignore logging errors */ }
+    
+    showPopup('✅ Message sent! Thanks for reaching out.');
+    form.reset();
   });
 })();
 
@@ -532,7 +555,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
       const rect = container.getBoundingClientRect();
       localStorage.setItem(KEY_W, Math.round(rect.width));
       localStorage.setItem(KEY_H, Math.round(rect.height));
-    } else if (path === 'projects.html') {
+    } else if (path === 'projects.html' || ((path === 'index.html' || path === '') && window.location.hash && window.location.hash.indexOf('projects') !== -1)) {
       const w = localStorage.getItem(KEY_W);
       const h = localStorage.getItem(KEY_H);
       if (w && h) {
@@ -554,7 +577,9 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   // Recompute on resize in case user resizes viewport — reapply stored dims if available
   window.addEventListener('resize', () => {
     if (!window.matchMedia('(min-width: 880px)').matches) return;
-    if (window.location.pathname.split('/').pop() === 'projects.html') {
+    const pop = window.location.pathname.split('/').pop();
+    const isProjectsRoute = pop === 'projects.html' || ((pop === 'index.html' || pop === '') && window.location.hash && window.location.hash.indexOf('projects') !== -1);
+    if (isProjectsRoute) {
       const w = localStorage.getItem(KEY_W);
       const h = localStorage.getItem(KEY_H);
       if (w && h && container) {

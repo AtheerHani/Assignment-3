@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Atheer's Portfolio</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="assets/images/new favicon.png" sizes="32x32" />
   </head>
   <body class="projects-page">
     <header class="site-header">
       <div class="container header-inner">
         <div class="brand">
-          <a href="about.html" class="site-title"><img src="assets/images/favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
+          <a href="about.html" class="site-title"><img src="assets/images/new favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
         </div>
 
         <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 
         <nav id="navbar" class="main-nav" aria-label="Primary">
           <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="resume.html">Resume</a></li>
-            <li><a href="contact.html">Contact</a></li>
+                            <img src="assets/images/hujra white.png" alt="حُجرة Logo" class="project-logo" data-dark-src="assets/images/hujra white.png" data-light-src="assets/images/Hujrah.png">
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
 
@@ -39,41 +39,7 @@
             <h2>Projects</h2>
           </div>
 
-          <div class="projects-grid projects-container">
-            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="app" data-title="FaceLite" data-link="https://github.com/AtheerHani/ICS108-Project">
-                <div class="card" role="link" tabindex="0">
-                <div class="content">
-                  <div class="front">
-                    <div class="inner">
-                      <img src="assets/images/FaceLite.png" alt="FaceLite Logo" class="project-logo">
-                    </div>
-                  </div>
-                  <div class="back">
-                    <div class="inner">
-                      <p>FaceLite is a JavaFX-based social networking application where users can create and customize profiles, add friends, share updates, and manage photos.</p>
-                    </div>
-                  </div>
-                </div>
-                </div>
-            </div>
-
-            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="web" data-title="حُجرة" data-link="https://github.com/AtheerHani/SWE363-Web-Engineering-Development-Project-T251">
-                <div class="card" role="link" tabindex="0">
-                <div class="content">
-                  <div class="front">
-                    <div class="inner">
-                      <img src="assets/images/Hujrah.png" alt="حُجرة Logo" class="project-logo">
-                    </div>
-                  </div>
-                  <div class="back">
-                    <div class="inner">
-                      <p>حُجرة connects people with unused spaces to those seeking affordable storage solutions. It includes listings, booking, secure payments, and messaging.</p>
-                    </div>
-                  </div>
-                </div>
-                </div>
-            </div>
-          </div>
+        <!-- projects removed: .projects-grid and project items deleted per request -->
         </div>
       </section>
     </main>

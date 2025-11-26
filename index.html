@@ -1,30 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Atheer's Portfolio</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="assets/images/new favicon.png" sizes="32x32" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
         <div class="brand">
-          <a href="about.html" class="site-title"><img src="assets/images/favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
+          <a href="about.html" class="site-title"><img src="assets/images/new favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
         </div>
 
         <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 
         <nav id="navbar" class="main-nav" aria-label="Primary">
           <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="resume.html">Resume</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
 
@@ -35,23 +33,8 @@
     </header>
 
     <main>
-      <section id="home" class="hero">
-        <div class="container hero-inner">
-          <div class="hero-copy">
-            <h1>Hi, I’m Atheer.</h1>
-            <p class="tagline">Software Engineering student focused on UI/UX, web, and app development.</p>
-            <div class="hero-ctas">
-              <a class="btn" href="projects.html">View Projects</a>
-              <a class="btn ghost" href="contact.html">Contact Me</a>
-            </div>
-          </div>
-          <div class="hero-media">
-            <img src="assets/images/portait.JPG" alt="Atheer portrait" class="profile-pic">
-          </div>
-        </div>
-      </section>
-
-      <section class="surface">
+      <!-- ABOUT -->
+      <section class="surface" id="about">
         <div class="container">
           <h2>
             <span class="visually-hidden">Hi, I'm Atheer</span>
@@ -60,12 +43,225 @@
           <div class="about-content">
             <div class="about-text">
               <p><strong>Junior Software Engineering student focused on UI/UX, front-end development, and accessible web applications.</strong></p>
-              <p>I study at King Fahd University of Petroleum &amp; Minerals (KFUPM) and sharpen my skills through campus initiatives like Gaming+ and student-led conferences (GSR, KISEF). I’ve also supported international delegations at academic Olympiads, combining leadership with technical work to deliver practical results.</p>
-              <p><a href="about.html" class="btn small">Read more about me</a></p>
+              <p>I study at King Fahd University of Petroleum &amp; Minerals (KFUPM) and sharpen my skills through campus initiatives like Gaming+ and student-led conferences (GSR, KISEF). I’ve supported international delegations at academic Olympiads, combining leadership with technical work to deliver practical results.</p>
+              <p>I enjoy building intuitive interfaces and practical web apps that solve real problems, with a strong interest in usability and accessibility.</p>
             </div>
             <div class="about-aside">
-              <img src="assets/images/portait.JPG" alt="Personal Image" class="profile-small">
+              <img src="assets/images/portrait.png" alt="Personal Image" class="profile-small">
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECHNICAL SKILLS (moved here from Experience) -->
+      <section class="skills-section">
+        <!-- Consolidated skills grid: 6 key skills, one Figma entry only -->
+        <div class="container">
+          <div class="skills-grid" role="list" aria-label="Key technical skills">
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/figma.png" alt="Figma logo">
+              <div class="skill-name">Figma</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/html.png" alt="HTML logo">
+              <div class="skill-name">HTML</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/css.png" alt="CSS logo" width="512" height="512">
+              <div class="skill-name">CSS</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/python.png" alt="Python logo">
+              <div class="skill-name">Python</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/js.png" alt="JavaScript logo">
+              <div class="skill-name">JavaScript</div>
+            </div>
+
+            <div class="skill-card" role="listitem">
+              <img src="assets/images/java.png" alt="Java logo">
+              <div class="skill-name">Java</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS (embedded) -->
+      <section class="surface" id="projects">
+        <div class="container">
+          <div class="section-head">
+            <h2>Projects</h2>
+          </div>
+
+          <div class="projects-grid projects-container">
+            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="app" data-title="FaceLite" data-link="https://github.com/AtheerHani/ICS108-Project">
+                <div class="card" role="link" tabindex="0">
+                <div class="content">
+                  <div class="front">
+                    <div class="inner">
+                      <img src="assets/images/FaceLite.png" alt="FaceLite Logo" class="project-logo">
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="inner">
+                      <p>FaceLite is a JavaFX-based social networking application where users can create and customize profiles, add friends, share updates, and manage photos.</p>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="web" data-title="حُجرة" data-link="https://github.com/AtheerHani/SWE363-Web-Engineering-Development-Project-T251">
+                <div class="card" role="link" tabindex="0">
+                <div class="content">
+                  <div class="front">
+                    <div class="inner">
+                      <img src="assets/images/hujra white.png" alt="حُجرة Logo" class="project-logo" data-dark-src="assets/images/hujra white.png" data-light-src="assets/images/Hujrah.png">
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="inner">
+                      <p>حُجرة connects people with unused spaces to those seeking affordable storage solutions. It includes listings, booking, secure payments, and messaging.</p>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE (embedded) -->
+      <section class="surface" id="experience">
+        <div class="container">
+          <div class="section-head">
+            <h2>Experience</h2>
+          </div>
+          <div class="resume">
+            <h3 class="section-sub">Professional development</h3>
+            <div class="dev-grid" role="list">
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">KAUST AI Specialization Program</div>
+                <div class="dev-date">Nov. 2025</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">United Kingdom Visit - KFUPM Representative</div>
+                <div class="dev-date">Oct. 2025</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Mentee — KFUPM Mentorship Program</div>
+                <div class="dev-date">Feb. 2024 – May 2024</div>
+              </div>
+            </div>
+            
+            
+            <h3 class="section-sub">Conferences, Events &amp; Clubs</h3>
+            <div class="conf-grid" role="list">
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Leader - Event Planning team - Robonexus Festival</div>
+                <div class="conf-date">Nov. 2025 – Present</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - Sponsorships Team - KFUPM World Event</div>
+                <div class="conf-date">July 2025 – Nov. 2025</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - Tech Team - Gaming+ Event</div>
+                <div class="conf-date">May 2025 – Present</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - KFUPM Yearbook</div>
+                <div class="conf-date">Nov. 2024 – May. 2025</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Leader - Design committee — KFUPM Computer Club</div>
+                <div class="conf-date">June 2024 – Dec. 2024</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Core member - Google Developer Students Club (GDSC)</div>
+                <div class="conf-date">Jan. 2024 – Aug. 2024</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - UAS2030 Autopilot &amp; Control team</div>
+                <div class="conf-date">Oct. 2023 – Feb. 2025</div>
+              </div>
+
+              <div class="conf-card" role="listitem">
+                <div class="conf-title">Member - KFUPM Toastmasters Club</div>
+                <div class="conf-date">Sep. 2023 – Sep. 2024</div>
+              </div>
+            </div>
+            
+            <h3 class="section-sub">Volunteering</h3>
+            <div class="dev-grid" role="list">
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Resident Assistant - Asian Physics Olympiad (APhO'25) at KFUPM (Mawhiba)</div>
+                <div class="dev-date">May 2025</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Resident Assistant - International Chemistry Olympiad (IChO'24) at KSU (Mawhiba)</div>
+                <div class="dev-date">July 2024</div>
+              </div>
+
+              <div class="dev-card" role="listitem">
+                <div class="dev-title">Teacher Assistant - Mawhiba Academic Summer Enrichment program</div>
+                <div class="dev-date">June 2024 – July 2024</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT (embedded) -->
+      <section class="surface" id="contact">
+        <div class="container">
+          <!-- Adapted ContactCard (HTML version of provided JSX) -->
+          <div class="contact-wrapper" style="position:relative; max-width:900px; margin:0 auto;">
+
+            <!-- decorative stars removed -->
+
+            <div class="contact-card" style="position:relative; border-radius:14px; padding:28px; background:rgba(13,23,36,0.28) !important; border:1px solid rgba(255,255,255,0.04) !important; box-shadow:0 18px 42px rgba(11,33,56,0.12) !important; backdrop-filter:blur(8px) saturate(120%) !important; -webkit-backdrop-filter:blur(8px) saturate(120%) !important;">
+              <div class="contact-head" style="margin-bottom:24px;">
+                <h2 style="color:var(--text-color);">Contact Me</h2>
+              </div>
+
+              <form id="contactForm" class="contact-form" novalidate>
+                <div class="form-row" style="display:flex; gap:12px; flex-wrap:wrap;">
+                  <div style="flex:1 1 240px; min-width:180px;">
+                    <label for="name">Your Name</label>
+                    <input id="name" name="name" type="text" required placeholder="e.g. Atheer Almomtin" style="width:100%; padding:12px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent;" />
+                  </div>
+                  <div style="flex:1 1 240px; min-width:180px;">
+                    <label for="email">Your Email</label>
+                    <input id="email" name="email" type="email" required placeholder="email@example.com" style="width:100%; padding:12px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent;" />
+                  </div>
+                </div>
+
+                <div style="margin-top:12px;">
+                  <label for="message">Your Message</label>
+                  <textarea id="message" name="message" rows="5" required placeholder="Feel free to reach out regarding any matter!" style="width:100%; padding:12px; border-radius:12px; background:#11142a; color:#fff; border:1px solid transparent; resize:none;"></textarea>
+                </div>
+
+                <div style="margin-top:16px;">
+                  <button type="submit" class="btn">Send</button>
+                </div>
+              </form>
+            </div>
+
           </div>
         </div>
       </section>
@@ -76,7 +272,6 @@
       </div>
     </footer>
 
-    <noscript><p class="muted">JavaScript is required for interactive features.</p></noscript>
     <script src="js/script.js" defer></script>
   </body>
 </html>

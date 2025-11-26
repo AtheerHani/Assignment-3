@@ -700,8 +700,72 @@ input[type="text"], input[type="search"], input[type="email"], textarea { paddin
 textarea { min-height: 120px; resize: vertical; }
 .form-row { display: flex; gap: 12px; }
 
+/* Contact form label sizing and font consistency */
+#contact .contact-card label,
+#contact label,
+.contact-card label {
+  font-family: inherit; /* use same font as rest of site (Inter) */
+  font-size: 14px; /* slightly smaller label text */
+  color: var(--muted-color);
+  display: block;
+  margin-bottom: 8px;
+}
+
+#contact .contact-card input,
+#contact .contact-card textarea,
+#contact .contact-card .btn {
+  font-family: inherit; /* ensure inputs use same font */
+}
+
+@media (min-width: 880px) {
+  #contact .contact-card label { font-size: 15px; }
+}
+
+/* Form Popup Notifications */
+.form-popup {
+  display: block;
+  width: 100%;
+  background: var(--accent-color);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(11, 33, 56, 0.15);
+  text-align: center;
+  animation: slideDown 0.3s ease-out;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-popup.fade-out {
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
 /* Buttons */
-.btn { display: inline-block; padding: 10px 14px; background: var(--secondary-color); color: var(--surface-color); border-radius: 8px; text-decoration: none; font-weight: 600; }
+.btn { display: inline-block; padding: 10px 14px; background: var(--secondary-color); color: #ffffff; border: none; border-radius: 8px; text-decoration: none; font-weight: 600; }
 .btn.ghost { background: transparent; color: var(--primary-color); border: 1px solid rgba(var(--primary-rgb), 0.06); }
 .btn.small { padding: 6px 8px; font-size: 14px; }
 
@@ -974,6 +1038,23 @@ html[data-theme="dark"] .stats-card {
 
 html[data-theme="dark"] .btn { background: var(--accent-color); }
 html[data-theme="dark"] .btn.ghost { background: transparent; color: var(--text-color); border-color: rgba(255,255,255,0.04); }
+
+/* Light-theme contact form inputs: switch to light colors */
+html[data-theme="light"] #contact input,
+html[data-theme="light"] #contact textarea,
+html[data-theme="light"] .contact-card input,
+html[data-theme="light"] .contact-card textarea {
+  background: #f5f7fa !important;
+  color: #052033 !important;
+  border: 1px solid rgba(31,58,107,0.15) !important;
+}
+
+html[data-theme="light"] #contact input::placeholder,
+html[data-theme="light"] #contact textarea::placeholder,
+html[data-theme="light"] .contact-card input::placeholder,
+html[data-theme="light"] .contact-card textarea::placeholder {
+  color: #6B8496 !important;
+}
 
 /* Resume-specific styles (scoped, minimal) */
 .resume { max-width: 920px; margin: 0 auto; }
