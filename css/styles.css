@@ -1133,3 +1133,107 @@ main > .surface > .container.glass-applied {
   background: transparent;
 }
 
+/* ========== RUBIK'S CUBE STYLING ========== */
+.text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  line-height: 0.75;
+  perspective: 100rem;
+  opacity: 1;
+}
+
+.text i {
+  display: inline-block;
+  opacity: 1;
+  white-space: pre-wrap;
+}
+
+.text--title {
+  bottom: 75%;
+  font-size: 2.2em;
+  height: 1.2em;
+  color: var(--text-color);
+}
+
+.text--title span {
+  display: block;
+}
+
+.text--title span:first-child {
+  font-size: 0.5em;
+  margin-bottom: 0.2em;
+}
+
+.text--note {
+  top: 87%;
+  font-size: 0.8em;
+  color: var(--muted-color);
+}
+
+.ui {
+  pointer-events: auto;
+  color: var(--text-color);
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ui,
+.ui__background,
+.ui__game,
+.ui__texts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ui__background {
+  display: none;
+}
+
+.ui__background:after {
+  display: none;
+}
+
+.ui__game {
+  pointer-events: all;
+  z-index: 2;
+}
+
+.ui__game canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cube-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  overflow: visible;
+  border-radius: 0;
+}
+
+/* Responsive adjustments for cube layout */
+@media (max-width: 768px) {
+  .contact-section-wrapper {
+    flex-direction: column !important;
+  }
+
+  .contact-wrapper,
+  .cube-container {
+    flex: 1 1 100% !important;
+    min-width: auto !important;
+  }
+
+  .text--title {
+    font-size: 1.6em;
+  }
+}

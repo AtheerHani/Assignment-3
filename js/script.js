@@ -878,3 +878,279 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     console.error('scrollRevealInit error', e);
   }
 })();
+/* ========== INTERACTIVE RUBIK'S CUBE FOR PORTFOLIO ========== */
+(function initPortfolioRubiksCube() {
+  if (typeof THREE === 'undefined') return;
+
+  const cubeContainer = document.querySelector('.cube-container');
+  if (!cubeContainer) return;
+
+  const gameDiv = cubeContainer.querySelector('.ui__game');
+  if (!gameDiv) return;
+
+  let scene, camera, renderer, rubiksCube;
+  let isDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+  let rotationVelocity = { x: 0, y: 0 };
+
+  // Rubik's cube colors
+  const COLORS = {
+    white: 0xFDF4FC,
+    yellow: 0xFCEC47,
+    red: 0xED3824,
+    orange: 0xFC8B0A,
+    green: 0x81C837,
+    blue: 0x40A8C6
+  };
+
+  function init() {
+    scene = new THREE.Scene();
+    scene.background = null;
+    scene.fog = new THREE.Fog(0x000000, 10, 15);
+
+    camera = new THREE.PerspectiveCamera(60, gameDiv.clientWidth / gameDiv.clientHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(gameDiv.clientWidth, gameDiv.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    gameDiv.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(10, 10, 10);
+    directionalLight.castShadow = true;
+    scene.add(directionalLight);
+
+    const pointLight = new THREE.PointLight(0xffffff, 0.4);
+    pointLight.position.set(-10, -10, 10);
+    scene.add(pointLight);
+
+    // Create Rubik's cube
+    rubiksCube = createRubiksCube();
+    scene.add(rubiksCube);
+
+    window.addEventListener('resize', onWindowResize, false);
+    gameDiv.addEventListener('mousedown', onMouseDown, false);
+    gameDiv.addEventListener('mousemove', onMouseMove, false);
+    gameDiv.addEventListener('mouseup', onMouseUp, false);
+    gameDiv.addEventListener('touchstart', onTouchStart, false);
+    gameDiv.addEventListener('touchmove', onTouchMove, false);
+    gameDiv.addEventListener('touchend', onTouchEnd, false);
+    gameDiv.addEventListener('mouseleave', onMouseUp, false);
+
+    animate();
+  }
+
+  function createRubiksCube() {
+    const cubeGroup = new THREE.Group();
+    const PIECE_SIZE = 0.65;
+    const GAP = 0.09;
+    const UNIT = PIECE_SIZE + GAP;
+
+    // Create all 27 pieces
+    for (let x = -1; x <= 1; x++) {
+      for (let y = -1; y <= 1; y++) {
+        for (let z = -1; z <= 1; z++) {
+          const piece = createCubePiece(PIECE_SIZE, x, y, z);
+          piece.position.set(x * UNIT, y * UNIT, z * UNIT);
+          cubeGroup.add(piece);
+        }
+      }
+    }
+
+    return cubeGroup;
+  }
+
+  function createCubePiece(size, posX, posY, posZ) {
+    const group = new THREE.Group();
+    
+    // Create geometry with proper spacing
+    const geometry = new THREE.BoxGeometry(size, size, size);
+    
+    // Create materials for each face
+    const materials = [];
+    
+    // Right face (X+)
+    materials.push(new THREE.MeshPhongMaterial({ 
+      color: posX > 0 ? COLORS.blue : 0x1a1a1a,
+      shininess: 100,
+      flatShading: false,
+      metalness: 0.3,
+      roughness: 0.4
+    }));
+    
+    // Left face (X-)
+    materials.push(new THREE.MeshPhongMaterial({ 
+      color: posX < 0 ? COLORS.green : 0x1a1a1a,
+      shininess: 100,
+      flatShading: false,
+      metalness: 0.3,
+      roughness: 0.4
+    }));
+    
+    // Top face (Y+)
+    materials.push(new THREE.MeshPhongMaterial({ 
+      color: posY > 0 ? COLORS.white : 0x1a1a1a,
+      shininess: 100,
+      flatShading: false,
+      metalness: 0.3,
+      roughness: 0.4
+    }));
+    
+    // Bottom face (Y-)
+    materials.push(new THREE.MeshPhongMaterial({ 
+      color: posY < 0 ? COLORS.yellow : 0x1a1a1a,
+      shininess: 100,
+      flatShading: false,
+      metalness: 0.3,
+      roughness: 0.4
+    }));
+    
+    // Front face (Z+)
+    materials.push(new THREE.MeshPhongMaterial({ 
+      color: posZ > 0 ? COLORS.red : 0x1a1a1a,
+      shininess: 100,
+      flatShading: false,
+      metalness: 0.3,
+      roughness: 0.4
+    }));
+    
+    // Back face (Z-)
+    materials.push(new THREE.MeshPhongMaterial({ 
+      color: posZ < 0 ? COLORS.orange : 0x1a1a1a,
+      shininess: 100,
+      flatShading: false,
+      metalness: 0.3,
+      roughness: 0.4
+    }));
+
+    const mesh = new THREE.Mesh(geometry, materials);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    group.add(mesh);
+
+    // Add thick black borders around each cubelet
+    const edges = new THREE.EdgesGeometry(geometry);
+    const lineWidth = size * 0.15;
+    
+    // Create thick black border using LineSegments with higher resolution
+    const line = new THREE.LineSegments(
+      edges,
+      new THREE.LineBasicMaterial({ 
+        color: 0x000000, 
+        linewidth: 3,
+        fog: false
+      })
+    );
+    line.position.z += 0.001; // Slight offset to prevent z-fighting
+    group.add(line);
+
+    // Add an additional outline for extra definition
+    const outlineGeometry = new THREE.EdgesGeometry(geometry);
+    const outline = new THREE.LineSegments(
+      outlineGeometry,
+      new THREE.LineBasicMaterial({
+        color: 0x000000,
+        linewidth: 2
+      })
+    );
+    outline.scale.set(1.02, 1.02, 1.02); // Slightly larger for visible outline effect
+    group.add(outline);
+
+    return group;
+  }
+
+  function onMouseDown(event) {
+    isDragging = true;
+    previousMousePosition = { x: event.clientX, y: event.clientY };
+    rotationVelocity = { x: 0, y: 0 };
+  }
+
+  function onMouseMove(event) {
+    if (isDragging) {
+      const deltaX = event.clientX - previousMousePosition.x;
+      const deltaY = event.clientY - previousMousePosition.y;
+
+      rotationVelocity.y = deltaX * 0.01;
+      rotationVelocity.x = deltaY * 0.01;
+
+      rubiksCube.rotation.order = 'YXZ';
+      rubiksCube.rotation.y += rotationVelocity.y;
+      rubiksCube.rotation.x += rotationVelocity.x;
+
+      previousMousePosition = { x: event.clientX, y: event.clientY };
+    }
+  }
+
+  function onMouseUp() {
+    isDragging = false;
+  }
+
+  function onTouchStart(event) {
+    if (event.touches.length === 1) {
+      isDragging = true;
+      previousMousePosition = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY
+      };
+      rotationVelocity = { x: 0, y: 0 };
+    }
+  }
+
+  function onTouchMove(event) {
+    if (isDragging && event.touches.length === 1) {
+      const deltaX = event.touches[0].clientX - previousMousePosition.x;
+      const deltaY = event.touches[0].clientY - previousMousePosition.y;
+
+      rotationVelocity.y = deltaX * 0.01;
+      rotationVelocity.x = deltaY * 0.01;
+
+      rubiksCube.rotation.order = 'YXZ';
+      rubiksCube.rotation.y += rotationVelocity.y;
+      rubiksCube.rotation.x += rotationVelocity.x;
+
+      previousMousePosition = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY
+      };
+    }
+  }
+
+  function onTouchEnd() {
+    isDragging = false;
+  }
+
+  function onWindowResize() {
+    const width = gameDiv.clientWidth;
+    const height = gameDiv.clientHeight;
+
+    if (width > 0 && height > 0) {
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Apply momentum/inertia when not dragging
+    if (!isDragging) {
+      rotationVelocity.x *= 0.98;
+      rotationVelocity.y *= 0.98;
+      
+      rubiksCube.rotation.order = 'YXZ';
+      rubiksCube.rotation.y += rotationVelocity.y;
+      rubiksCube.rotation.x += rotationVelocity.x;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  init();
+})();
