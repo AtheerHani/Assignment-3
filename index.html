@@ -85,7 +85,7 @@
     <header class="site-header">
       <div class="container header-inner">
         <div class="brand">
-          <a href="about.html" class="site-title"><img src="assets/images/new favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
+          <a href="#" class="site-title"><img src="assets/images/new favicon.png" alt="" class="brand-icon">Atheer Almomtin<span class="dot">.</span></a>
         </div>
 
         <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
@@ -167,44 +167,36 @@
 
       <!-- PROJECTS (embedded) -->
       <section class="surface" id="projects">
-        <div class="container">
-          <div class="section-head">
-            <h2>Projects</h2>
-          </div>
-
-          <div class="projects-grid projects-container">
-            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="app" data-title="FaceLite" data-link="https://github.com/AtheerHani/ICS108-Project">
-                <div class="card" role="link" tabindex="0">
-                <div class="content">
-                  <div class="front">
-                    <div class="inner">
-                      <img src="assets/images/FaceLite.png" alt="FaceLite Logo" class="project-logo">
-                    </div>
-                  </div>
-                  <div class="back">
-                    <div class="inner">
-                      <p>FaceLite is a JavaFX-based social networking application where users can create and customize profiles, add friends, share updates, and manage photos.</p>
-                    </div>
+        <div class="wrapper">
+          <h2>Projects</h2>
+          <div class="cols">
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+              <div class="container">
+                <div class="front">
+                  <div class="inner">
+                    <img src="assets/images/hujra white.png" alt="Hujrah" class="project-logo-flip" data-light-src="assets/images/Hujrah.png" data-dark-src="assets/images/hujra white.png">
                   </div>
                 </div>
+                <div class="back">
+                  <div class="inner">
+                    <p>حُجرة connects people with unused spaces to those seeking affordable storage solutions. It includes listings, booking, secure payments, and messaging.</p>
+                  </div>
                 </div>
+              </div>
             </div>
-
-            <div class="project-item" ontouchstart="this.classList.toggle('hover');" data-category="web" data-title="حُجرة" data-link="https://github.com/AtheerHani/SWE363-Web-Engineering-Development-Project-T251">
-                <div class="card" role="link" tabindex="0">
-                <div class="content">
-                  <div class="front">
-                    <div class="inner">
-                      <img src="assets/images/hujra white.png" alt="حُجرة Logo" class="project-logo" data-dark-src="assets/images/hujra white.png" data-light-src="assets/images/Hujrah.png">
-                    </div>
-                  </div>
-                  <div class="back">
-                    <div class="inner">
-                      <p>حُجرة connects people with unused spaces to those seeking affordable storage solutions. It includes listings, booking, secure payments, and messaging.</p>
-                    </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+              <div class="container">
+                <div class="front">
+                  <div class="inner">
+                    <img src="assets/images/FaceLite.png" alt="FaceLite" class="project-logo-flip">
                   </div>
                 </div>
+                <div class="back">
+                  <div class="inner">
+                    <p>FaceLite is a JavaFX-based social networking application where users can create and customize profiles, add friends, share updates, and manage photos.</p>
+                  </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -217,84 +209,93 @@
             <h2>Experience</h2>
           </div>
           <div class="resume">
-            <h3 class="section-sub">Professional development</h3>
-            <div class="dev-grid" role="list">
-              <div class="dev-card" role="listitem">
-                <div class="dev-title">KAUST AI Specialization Program</div>
-                <div class="dev-date">Nov. 2025</div>
+            <div class="experience-carousel-container">
+              <button class="carousel-nav carousel-nav-prev" aria-label="Previous experiences">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              
+              <div class="experience-carousel-viewport">
+                <div class="experience-carousel" role="list">
+                  <a href="https://academy.kaust.edu.sa/program/university-students/ai-specialization/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/KAUST.png" alt="KAUST" class="exp-logo">
+                  <div class="exp-title">KAUST AI Specialization Program</div>
+                  <div class="exp-date">Nov. 2025</div>
+                </div>
+              </a>
+
+              <div class="experience-card" role="listitem">
+                <img src="assets/images/Experience logos/Robonexus black.png" alt="Robonexus" class="exp-logo exp-logo-robonexus-light">
+                <img src="assets/images/Experience logos/Robonexus white.png" alt="Robonexus" class="exp-logo exp-logo-robonexus-dark" style="display: none;">
+                <div class="exp-title">Event Planning team lead - Robonexus Festival</div>
+                <div class="exp-date">Nov. 2025 – Present</div>
               </div>
 
-              <div class="dev-card" role="listitem">
-                <div class="dev-title">United Kingdom Visit - KFUPM Representative</div>
-                <div class="dev-date">Oct. 2025</div>
-              </div>
+              <a href="https://www.kfupm.edu.sa/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/KFUPM.svg.png" alt="KFUPM" class="exp-logo">
+                  <div class="exp-title">United Kingdom Visit - KFUPM Representative</div>
+                  <div class="exp-date">Oct. 2025</div>
+                </div>
+              </a>
 
-              <div class="dev-card" role="listitem">
-                <div class="dev-title">Mentee — KFUPM Mentorship Program</div>
-                <div class="dev-date">Feb. 2024 – May 2024</div>
-              </div>
-            </div>
-            
-            
-            <h3 class="section-sub">Conferences, Events &amp; Clubs</h3>
-            <div class="conf-grid" role="list">
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Leader - Event Planning team - Robonexus Festival</div>
-                <div class="conf-date">Nov. 2025 – Present</div>
-              </div>
+              <a href="https://gamingplus.gg/LandPage" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/Gaming+.png" alt="Gaming+ Event" class="exp-logo">
+                  <div class="exp-title">Web Design Team - Gaming+ Event</div>
+                  <div class="exp-date">May 2025 – Present</div>
+                </div>
+              </a>
 
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Member - Sponsorships Team - KFUPM World Event</div>
-                <div class="conf-date">July 2025 – Nov. 2025</div>
-              </div>
+              <a href="https://kfupm.world/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/KW.png" alt="KFUPM World Event" class="exp-logo">
+                  <div class="exp-title">Sponsorships - KFUPM World Event</div>
+                  <div class="exp-date">July 2025 – Nov. 2025</div>
+                </div>
+              </a>
 
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Member - Tech Team - Gaming+ Event</div>
-                <div class="conf-date">May 2025 – Present</div>
-              </div>
+              <a href="https://www.kfupm.edu.sa/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/Mentorship.png" alt="Mentorship" class="exp-logo">
+                  <div class="exp-title">Mentee — KFUPM Mentorship Program</div>
+                  <div class="exp-date">Feb. 2024 – May 2024</div>
+                </div>
+              </a>
 
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Member - KFUPM Yearbook</div>
-                <div class="conf-date">Nov. 2024 – May. 2025</div>
-              </div>
+              <a href="https://www.mawhiba.sa/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/Mawhiba.png" alt="Mawhiba" class="exp-logo">
+                  <div class="exp-title">Resident Assistant - Asian Physics Olympiad (APhO'25) at KFUPM (Mawhiba)</div>
+                  <div class="exp-date">May 2025</div>
+                </div>
+              </a>
 
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Leader - Design committee — KFUPM Computer Club</div>
-                <div class="conf-date">June 2024 – Dec. 2024</div>
-              </div>
+              <a href="https://www.mawhiba.sa/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/Mawhiba.png" alt="Mawhiba" class="exp-logo">
+                  <div class="exp-title">Resident Assistant - International Chemistry Olympiad (IChO'24) at KSU (Mawhiba)</div>
+                  <div class="exp-date">July 2024</div>
+                </div>
+              </a>
 
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Core member - Google Developer Students Club (GDSC)</div>
-                <div class="conf-date">Jan. 2024 – Aug. 2024</div>
+              <a href="https://www.mawhiba.sa/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                <div class="experience-card" role="listitem">
+                  <img src="assets/images/Experience logos/Mawhiba.png" alt="Mawhiba" class="exp-logo">
+                  <div class="exp-title">Teacher Assistant - Academic Summer Enrichment program (Mawhiba)</div>
+                  <div class="exp-date">June 2024 – July 2024</div>
+                </div>
+              </a>
+                </div>
               </div>
-
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Member - UAS2030 Autopilot &amp; Control team</div>
-                <div class="conf-date">Oct. 2023 – Feb. 2025</div>
-              </div>
-
-              <div class="conf-card" role="listitem">
-                <div class="conf-title">Member - KFUPM Toastmasters Club</div>
-                <div class="conf-date">Sep. 2023 – Sep. 2024</div>
-              </div>
-            </div>
-            
-            <h3 class="section-sub">Volunteering</h3>
-            <div class="dev-grid" role="list">
-              <div class="dev-card" role="listitem">
-                <div class="dev-title">Resident Assistant - Asian Physics Olympiad (APhO'25) at KFUPM (Mawhiba)</div>
-                <div class="dev-date">May 2025</div>
-              </div>
-
-              <div class="dev-card" role="listitem">
-                <div class="dev-title">Resident Assistant - International Chemistry Olympiad (IChO'24) at KSU (Mawhiba)</div>
-                <div class="dev-date">July 2024</div>
-              </div>
-
-              <div class="dev-card" role="listitem">
-                <div class="dev-title">Teacher Assistant - Mawhiba Academic Summer Enrichment program</div>
-                <div class="dev-date">June 2024 – July 2024</div>
-              </div>
+              
+              <button class="carousel-nav carousel-nav-next" aria-label="Next experiences">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
             </div>
           </div>
         </div>

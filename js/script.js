@@ -3,6 +3,34 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
+/* Theme-aware logo switching for project cards */
+(function initProjectLogos() {
+  function updateProjectLogos() {
+    const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+    const hujrahLogo = document.querySelector('.project-logo-flip[data-light-src]');
+    
+    if (hujrahLogo) {
+      const lightSrc = hujrahLogo.getAttribute('data-light-src');
+      const darkSrc = hujrahLogo.getAttribute('data-dark-src');
+      hujrahLogo.src = isDarkMode ? darkSrc : lightSrc;
+    }
+  }
+  
+  // Update on initial load
+  updateProjectLogos();
+  
+  // Update when theme changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'data-theme') {
+        updateProjectLogos();
+      }
+    });
+  });
+  
+  observer.observe(document.documentElement, { attributes: true });
+})();
+
 /* Parallax tilt + floating depth for project cards */
 (function projectParallaxInit() {
   const items = $$('.project-item');
@@ -495,6 +523,10 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
   const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
+  // Initialize EmailJS (you'll need to get your own service ID and template ID)
+  // For now, we'll use a fallback mailto method
+  const RECIPIENT_EMAIL = 'Atheer.almomtin@gmail.com';
+
   const showPopup = (msg) => {
     // Remove existing popup if any
     const existing = form.querySelector('.form-popup');
@@ -533,30 +565,40 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
       return;
     }
 
-    // Form is valid - submit
-    try {
-      const data = { name: name.value.trim(), email: email.value.trim(), message: message.value.trim() };
-      console.log('Form submitted:', data);
-    } catch (e) { /* ignore logging errors */ }
-    
-    // Show success modal
-    const modal = document.getElementById('successModal');
-    if (modal) {
-      const modalContent = modal.querySelector('.modal-content');
-      modal.classList.add('active');
-      modalContent.classList.remove('dismiss');
-      form.reset();
-      // Auto-dismiss after 1.5 seconds
-      setTimeout(() => {
-        modalContent.classList.add('dismiss');
+    // Form is valid - send email via FormSubmit.co
+    const formData = new FormData();
+    formData.append('name', name.value.trim());
+    formData.append('email', email.value.trim());
+    formData.append('message', message.value.trim());
+
+    fetch('https://formsubmit.co/6ee1d5fa41565281c0e21a53921c2d00', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      // Show success modal regardless of response
+      const modal = document.getElementById('successModal');
+      if (modal) {
+        const modalContent = modal.querySelector('.modal-content');
+        modal.classList.add('active');
+        modalContent.classList.remove('dismiss');
+        form.reset();
+        // Auto-dismiss after 1.5 seconds
         setTimeout(() => {
-          modal.classList.remove('active');
-        }, 400);
-      }, 1500);
-    } else {
-      showPopup('✅ Message sent! Thanks for reaching out.');
-      form.reset();
-    }
+          modalContent.classList.add('dismiss');
+          setTimeout(() => {
+            modal.classList.remove('active');
+          }, 400);
+        }, 1500);
+      } else {
+        showPopup('✅ Message sent! Thanks for reaching out.');
+        form.reset();
+      }
+    })
+    .catch(error => {
+      console.error('Error sending email:', error);
+      showPopup('Failed to send message. Please try again.');
+    });
   });
 })();
 
@@ -915,14 +957,26 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   let previousMousePosition = { x: 0, y: 0 };
   let rotationVelocity = { x: 0, y: 0 };
 
-  // Rubik's cube colors
-  const COLORS = {
-    white: 0xFDF4FC,
-    yellow: 0xFCEC47,
-    red: 0xED3824,
-    orange: 0xFC8B0A,
-    green: 0x81C837,
-    blue: 0x40A8C6
+  // Rubik's cube colors - highly contrasting blue shades
+  // Light mode: light to dark blues, Dark mode: bright to deep blues
+  const isDarkMode = () => document.documentElement.getAttribute('data-theme') === 'dark';
+  
+  const COLORS = isDarkMode() ? {
+    // Dark mode: maximum contrast blues
+    brightBlue: 0x40A8C6,   // bright cyan-blue
+    lightBlue: 0x6BB8D6,    // light blue (much lighter)
+    mediumBlue: 0x2E6BA8,   // medium blue
+    accentBlue: 0x1F3A6B,   // darker accent
+    darkBlue: 0x0F1F3F,     // very dark blue
+    navyBlue: 0x041020      // almost black navy
+  } : {
+    // Light mode: bright to deep blues with maximum separation
+    brightBlue: 0x5DADE2,   // bright light blue
+    lightBlue: 0x3498DB,    // light blue
+    mediumBlue: 0x2471A3,   // medium blue
+    accentBlue: 0x154360,   // dark blue
+    darkBlue: 0x082741,     // very dark blue
+    navyBlue: 0x051133      // navy black
   };
 
   function init() {
@@ -955,6 +1009,12 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
     // Create Rubik's cube
     rubiksCube = createRubiksCube();
+    // Set initial rotation to show the blue, red, and white corner
+    rubiksCube.rotation.order = 'YXZ';
+    rubiksCube.rotation.x = 0.55;
+    rubiksCube.rotation.y = -0.6;
+    rotationX = 0.55;
+    rotationY = -0.6;
     scene.add(rubiksCube);
 
     window.addEventListener('resize', onWindowResize, false);
@@ -1008,22 +1068,22 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     };
     
     // Right face (X+)
-    materials.push(getMaterial(posX > 0 ? COLORS.blue : 0x0f0f0f));
+    materials.push(getMaterial(posX > 0 ? COLORS.brightBlue : 0x0f0f0f));
     
     // Left face (X-)
-    materials.push(getMaterial(posX < 0 ? COLORS.green : 0x0f0f0f));
+    materials.push(getMaterial(posX < 0 ? COLORS.lightBlue : 0x0f0f0f));
     
     // Top face (Y+)
-    materials.push(getMaterial(posY > 0 ? COLORS.white : 0x0f0f0f));
+    materials.push(getMaterial(posY > 0 ? COLORS.mediumBlue : 0x0f0f0f));
     
     // Bottom face (Y-)
-    materials.push(getMaterial(posY < 0 ? COLORS.yellow : 0x0f0f0f));
+    materials.push(getMaterial(posY < 0 ? COLORS.accentBlue : 0x0f0f0f));
     
     // Front face (Z+)
-    materials.push(getMaterial(posZ > 0 ? COLORS.red : 0x0f0f0f));
+    materials.push(getMaterial(posZ > 0 ? COLORS.darkBlue : 0x0f0f0f));
     
     // Back face (Z-)
-    materials.push(getMaterial(posZ < 0 ? COLORS.orange : 0x0f0f0f));
+    materials.push(getMaterial(posZ < 0 ? COLORS.navyBlue : 0x0f0f0f));
 
     const mesh = new THREE.Mesh(geometry, materials);
     mesh.castShadow = true;
@@ -1124,10 +1184,12 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   function animate() {
     requestAnimationFrame(animate);
 
-    // Apply momentum/inertia when not dragging
     if (!isDragging) {
       rotationVelocity.x *= 0.98;
       rotationVelocity.y *= 0.98;
+      
+  
+      rotationVelocity.y += 0.0001;
       
       rubiksCube.rotation.order = 'YXZ';
       rubiksCube.rotation.y += rotationVelocity.y;
@@ -1139,3 +1201,184 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
   init();
 })();
+
+/* ========== EXPERIENCE CAROUSEL ========== */
+(function initExperienceCarousel() {
+  const carousel = document.querySelector('.experience-carousel');
+  const prevBtn = document.querySelector('.carousel-nav-prev');
+  const nextBtn = document.querySelector('.carousel-nav-next');
+  
+  if (!carousel || !prevBtn || !nextBtn) return;
+
+  const cardWidth = 360;
+  const cardGap = 20;
+  const itemSize = cardWidth + cardGap;
+  let isTransitioning = false;
+  
+  // Get original cards
+  const originalCards = Array.from(carousel.querySelectorAll('.experience-card'));
+  const originalCardCount = originalCards.length;
+
+  // Set up carousel
+  carousel.style.display = 'flex';
+  carousel.style.flexDirection = 'row';
+
+  // Clone: first card to end, last card to start
+  const firstCardClone = originalCards[0].cloneNode(true);
+  const lastCardClone = originalCards[originalCardCount - 1].cloneNode(true);
+  
+  carousel.insertBefore(lastCardClone, carousel.firstChild);
+  carousel.appendChild(firstCardClone);
+
+  // Now get all cards (includes clones)
+  let allCards = Array.from(carousel.querySelectorAll('.experience-card'));
+  const totalCards = allCards.length; // 9 + 2 = 11
+  
+  // Start at index 1 (first real card)
+  let currentIndex = 1;
+
+  // Initialize card display
+  const initializeCards = () => {
+    allCards.forEach((card) => {
+      card.style.minHeight = '520px';
+      card.style.height = '520px';
+      card.style.width = cardWidth + 'px';
+      card.style.flex = `0 0 ${cardWidth}px`;
+      card.style.transition = 'opacity 500ms ease, filter 500ms ease, transform 500ms ease';
+    });
+  };
+
+  // Update carousel position
+  const updateCarousel = (smooth = true) => {
+    if (smooth && isTransitioning) return;
+    
+    if (smooth) {
+      isTransitioning = true;
+      carousel.style.transition = 'transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    } else {
+      carousel.style.transition = 'none';
+    }
+
+    // Calculate offset: simple approach
+    const offset = -(currentIndex - 1) * itemSize;
+    carousel.style.transform = `translateX(${offset}px)`;
+
+    // Determine which real card indices are visible
+    let centerIdx = currentIndex;
+    let leftIdx = currentIndex - 1;
+    let rightIdx = currentIndex + 1;
+
+    // Update card styling
+    allCards.forEach((card, index) => {
+      if (index === centerIdx) {
+        card.style.opacity = '1';
+        card.style.filter = 'blur(0px)';
+        card.style.transform = 'scale(1)';
+        card.style.pointerEvents = 'auto';
+      } else if (index === leftIdx || index === rightIdx) {
+        card.style.opacity = '0.65';
+        card.style.filter = 'blur(0px)';
+        card.style.transform = 'scale(0.9)';
+        card.style.pointerEvents = 'auto';
+      } else {
+        card.style.opacity = '0';
+        card.style.filter = 'blur(3px)';
+        card.style.transform = 'scale(0.8)';
+        card.style.pointerEvents = 'none';
+      }
+    });
+
+    if (smooth) {
+      setTimeout(() => {
+        // After animation, check if we're at a clone and jump seamlessly
+        if (currentIndex === 0) {
+          // At fake first (last card clone), jump to real last
+          currentIndex = originalCardCount;
+          carousel.style.transition = 'none';
+          const newOffset = -(currentIndex - 1) * itemSize;
+          carousel.style.transform = `translateX(${newOffset}px)`;
+          
+          // Re-apply styling for new position
+          let centerIdx = currentIndex;
+          let leftIdx = currentIndex - 1;
+          let rightIdx = currentIndex + 1;
+          allCards.forEach((card, index) => {
+            if (index === centerIdx) {
+              card.style.opacity = '1';
+              card.style.filter = 'blur(0px)';
+              card.style.transform = 'scale(1)';
+            } else if (index === leftIdx || index === rightIdx) {
+              card.style.opacity = '0.65';
+              card.style.filter = 'blur(0px)';
+              card.style.transform = 'scale(0.9)';
+            } else {
+              card.style.opacity = '0';
+              card.style.filter = 'blur(3px)';
+              card.style.transform = 'scale(0.8)';
+            }
+          });
+        } else if (currentIndex === totalCards - 1) {
+          // At fake last (first card clone), jump to real first
+          currentIndex = 1;
+          carousel.style.transition = 'none';
+          const newOffset = -(currentIndex - 1) * itemSize;
+          carousel.style.transform = `translateX(${newOffset}px)`;
+          
+          // Re-apply styling for new position
+          let centerIdx = currentIndex;
+          let leftIdx = currentIndex - 1;
+          let rightIdx = currentIndex + 1;
+          allCards.forEach((card, index) => {
+            if (index === centerIdx) {
+              card.style.opacity = '1';
+              card.style.filter = 'blur(0px)';
+              card.style.transform = 'scale(1)';
+            } else if (index === leftIdx || index === rightIdx) {
+              card.style.opacity = '0.65';
+              card.style.filter = 'blur(0px)';
+              card.style.transform = 'scale(0.9)';
+            } else {
+              card.style.opacity = '0';
+              card.style.filter = 'blur(3px)';
+              card.style.transform = 'scale(0.8)';
+            }
+          });
+        }
+        
+        isTransitioning = false;
+      }, 600);
+    }
+  };
+
+  // Navigation handlers
+  prevBtn.addEventListener('click', () => {
+    if (isTransitioning) return;
+    currentIndex--;
+    updateCarousel(true);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (isTransitioning) return;
+    currentIndex++;
+    updateCarousel(true);
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    const isCarouselInView = carousel.closest('#experience');
+    if (!isCarouselInView || isTransitioning) return;
+    
+    if (e.key === 'ArrowLeft') {
+      currentIndex--;
+      updateCarousel(true);
+    } else if (e.key === 'ArrowRight') {
+      currentIndex++;
+      updateCarousel(true);
+    }
+  });
+
+  // Initial setup
+  initializeCards();
+  updateCarousel(false);
+})();
+

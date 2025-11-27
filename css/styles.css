@@ -598,6 +598,23 @@ html[data-theme="dark"] .dev-card {
 .project-item .front .inner { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 100%; }
 .project-item .front .project-logo { width: auto; max-width: 80%; height: auto; max-height: 260px; object-fit: contain; z-index: 3; position: relative; /* allow depth via CSS variable */ transform: translateZ(var(--logo-z,90px)); will-change: transform; margin: 0 auto; display: block; }
 
+/* Tech stack styling on front */
+.tech-stack {
+  font-size: 14px;
+  color: var(--muted-color);
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.5px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(var(--accent-rgb,31,58,107), 0.08);
+}
+
+html[data-theme="dark"] .tech-stack {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* Ensure logos are visually centered inside the front face (both axes). This
   helps when an image file contains whitespace/padding so the visible mark
   still appears centered. */
@@ -873,6 +890,353 @@ html[data-theme="dark"] .skill-card {
   .skill-card img { width: 48px; height: 48px; }
 }
 
+/* Experience cards - matching skill card styling */
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.experience-card {
+  padding: 24px;
+  min-height: 140px;
+  border-radius: 14px;
+  background: rgba(var(--surface-rgb,170,188,189), 0.06);
+  border: none;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 18px 42px rgba(11,33,56,0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--text-color);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 180ms ease;
+}
+
+.exp-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.exp-title {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.exp-date {
+  font-size: 14px;
+  color: var(--muted-color);
+}
+
+/* Theme-aware Robonexus logo */
+.exp-logo-robonexus-light {
+  display: block !important;
+}
+
+.exp-logo-robonexus-dark {
+  display: none !important;
+}
+
+html[data-theme="dark"] .exp-logo-robonexus-light {
+  display: none !important;
+}
+
+html[data-theme="dark"] .exp-logo-robonexus-dark {
+  display: block !important;
+}
+
+html[data-theme="dark"] .experience-card {
+  background: rgba(var(--surface-dark-rgb,13,23,36), 0.28);
+  border: none;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+.experience-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(11,33,56,0.16);
+}
+
+@media (min-width: 880px) {
+  .experience-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  
+  .experience-card {
+    padding: 28px;
+    min-height: 180px;
+    box-shadow: 0 22px 48px rgba(11,33,56,0.14);
+  }
+  
+  .exp-title {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 880px) {
+  .experience-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .experience-card {
+    padding: 18px;
+    min-height: 120px;
+  }
+  
+  .exp-title {
+    font-size: 15px;
+  }
+}
+
+/* ========== EXPERIENCE CAROUSEL ========== */
+
+.experience-carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 0;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  background: transparent;
+}
+
+/* Navigation buttons */
+.carousel-nav {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(var(--surface-rgb, 170, 188, 189), 0.08);
+  border: 1px solid rgba(var(--accent-rgb, 31, 58, 107), 0.1);
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 300ms ease;
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+.carousel-nav:hover:not(:disabled) {
+  background: rgba(var(--surface-rgb, 170, 188, 189), 0.12);
+  border-color: rgba(var(--accent-rgb, 31, 58, 107), 0.15);
+  transform: scale(1.08);
+}
+
+.carousel-nav:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.carousel-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+html[data-theme="dark"] .carousel-nav {
+  background: rgba(var(--surface-dark-rgb, 13, 23, 36), 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] .carousel-nav:hover:not(:disabled) {
+  background: rgba(var(--surface-dark-rgb, 13, 23, 36), 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Carousel viewport - shows exactly 3 cards */
+.experience-carousel-viewport {
+  position: relative;
+  width: 1160px !important;
+  overflow: hidden;
+  perspective: 1000px;
+  margin: 0 auto;
+}
+
+/* Mobile carousel viewport - shows 1 card */
+@media (max-width: 768px) {
+  .experience-carousel-viewport {
+    width: 100% !important;
+    max-width: 90vw !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Carousel grid - 3 cards visible side by side */
+.experience-carousel {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 20px !important;
+  width: auto;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Experience card base styling */
+.experience-carousel .experience-card {
+  position: relative;
+  width: 360px;
+  height: 520px;
+  min-height: 520px;
+  flex: 0 0 360px;
+  border-radius: 26px;
+  padding: 40px;
+  transition: opacity 500ms ease, filter 500ms ease, transform 500ms ease;
+  opacity: 0.65;
+  filter: blur(0px);
+  transform: scale(0.9);
+  background: rgba(var(--surface-rgb, 170, 188, 189), 0.06);
+  border: none;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 18px 42px rgba(11, 33, 56, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Center card (index 1) - highlighted */
+.experience-carousel .experience-card:nth-child(2) {
+  transform: scale(1);
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.experience-carousel .experience-card:hover {
+  transform: scale(0.93);
+}
+
+.experience-carousel .experience-card:nth-child(2):hover {
+  transform: scale(1.04);
+  box-shadow: 0 26px 60px rgba(11, 33, 56, 0.16);
+}
+
+/* Logo styling */
+.experience-carousel .exp-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 24px;
+}
+
+/* Title and date */
+.experience-carousel .exp-title {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.experience-carousel .exp-date {
+  font-size: 16px;
+  color: var(--muted-color);
+}
+
+/* Dark theme */
+html[data-theme="dark"] .experience-carousel .experience-card {
+  background: rgba(var(--surface-dark-rgb, 13, 23, 36), 0.28);
+  border: none;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] .experience-carousel .experience-card:nth-child(2) {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* Experience section scroll positioning */
+section#experience {
+  scroll-margin-top: 120px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .experience-carousel-container {
+    gap: 12px;
+  }
+
+  .experience-carousel {
+    gap: 12px !important;
+  }
+
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .carousel-nav svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .experience-carousel .experience-card {
+    min-height: 200px;
+    padding: 20px;
+  }
+
+  .experience-carousel .exp-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .experience-carousel .exp-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .experience-carousel-container {
+    gap: 8px;
+  }
+
+  .experience-carousel {
+    gap: 8px !important;
+  }
+
+  .carousel-nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .carousel-nav svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .experience-carousel .experience-card {
+    min-height: 160px;
+    padding: 16px;
+  }
+
+  .experience-carousel .exp-logo {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+  }
+
+  .experience-carousel .exp-title {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .experience-carousel .exp-date {
+    font-size: 12px;
+  }
+}
+
 /* Add vertical spacing between consecutive skill grids when subtitles are removed */
 .skills-grid + .skills-grid { margin-top: 28px; }
 
@@ -1057,7 +1421,19 @@ html[data-theme="light"] .contact-card textarea::placeholder {
 }
 
 /* Resume-specific styles (scoped, minimal) */
-.resume { max-width: 920px; margin: 0 auto; }
+.resume { 
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.resume > *:not(.experience-carousel-container) {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
 .resume-header { text-align: center; margin-bottom: 20px; }
 .resume-header h2 { font-size: 28px; letter-spacing: -0.02em; margin-bottom: 6px; }
 .resume-contact { color: var(--muted-color); margin-bottom: 12px; }
@@ -1223,17 +1599,342 @@ main > .surface > .container.glass-applied {
 
 /* Responsive adjustments for cube layout */
 @media (max-width: 768px) {
-  .contact-section-wrapper {
+  /* About section: photo first, then text below */
+  .about-content {
+    display: flex !important;
     flex-direction: column !important;
+    gap: 24px !important;
+  }
+  
+  .about-text {
+    order: 2 !important;
+  }
+  
+  .about-aside {
+    order: 1 !important;
+    width: 280px !important;
+    height: 280px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  .about-aside .profile-small {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    margin: 0 !important;
+    transform: scale(1.7) !important;
+    border-radius: 12px !important;
+  }
+  
+  /* Experience carousel: center the card within container */
+  .experience-carousel-viewport {
+    width: 100% !important;
+    max-width: 90vw !important;
+    margin: 0 auto !important;
+  }
+  
+  .experience-carousel-container {
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+  }
+  
+  .carousel-nav {
+    display: flex !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .carousel-nav svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  .experience-carousel {
+    gap: 8px !important;
   }
 
-  .contact-wrapper,
+  .contact-section-wrapper {
+    flex-direction: column !important;
+    gap: 24px !important;
+    align-items: center !important;
+  }
+
+  .contact-wrapper {
+    flex: 1 1 100% !important;
+    min-width: auto !important;
+    width: 100% !important;
+    max-width: 90vw !important;
+  }
+  
   .cube-container {
     flex: 1 1 100% !important;
     min-width: auto !important;
+    width: 100% !important;
+    max-width: 90vw !important;
+    min-height: 400px !important;
+    display: block !important;
+    background: transparent !important;
   }
 
   .text--title {
     font-size: 1.6em;
+  }
+  
+  /* Stack project cards vertically */
+  .projects-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  
+  .project-item {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .project-item .card {
+    min-height: 300px !important;
+  }
+  
+  /* Responsive overview paragraph */
+  .overview {
+    padding: 0 18px !important;
+  }
+  
+  /* Contact form mobile responsive */
+  .contact-card {
+    padding: 40px 24px !important;
+  }
+  
+  .contact-head h2 {
+    font-size: 32px !important;
+  }
+  
+  .form-row {
+    flex-direction: column !important;
+  }
+  
+  .form-row > div {
+    width: 100% !important;
+    min-width: auto !important;
+  }
+  
+  /* Container mobile padding */
+  .container {
+    padding: 0 16px !important;
+  }
+}
+
+/* ========== PARALLAX FLIPPING CARDS ========== */
+.wrapper {
+  width: 90%;
+  margin: 0 auto;
+  max-width: 80rem;
+}
+
+.cols {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10rem;
+}
+
+.col {
+  width: calc(50% - 2rem);
+  margin: 1rem;
+  cursor: pointer;
+}
+
+.container {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.front,
+.back {
+  background-size: cover;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  border-radius: 10px;
+  background-position: center;
+  transition: transform .7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  backface-visibility: hidden;
+  text-align: center;
+  min-height: 350px;
+  height: auto;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 2.5rem;
+}
+
+.front {
+  position: relative;
+  background-color: rgba(var(--surface-rgb,170,188,189), 0.06);
+  border: 1px solid rgba(var(--accent-rgb,31,58,107), 0.06);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 18px 42px rgba(11,33,56,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo styling for flip cards */
+.project-logo-flip {
+  width: auto;
+  max-width: 80%;
+  height: auto;
+  max-height: 320px;
+  object-fit: contain;
+  display: block;
+  z-index: 10;
+  position: static;
+}
+
+html[data-theme="dark"] .front {
+  background-color: rgba(var(--surface-dark-rgb,13,23,36), 0.28);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+.front:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  content: '';
+  display: block;
+  opacity: 0;
+  background-color: transparent;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+.back {
+  background: rgba(var(--surface-rgb,170,188,189), 0.06) !important;
+  border: 1px solid rgba(var(--accent-rgb,31,58,107), 0.06);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 18px 42px rgba(11,33,56,0.12);
+}
+
+html[data-theme="dark"] .back {
+  background: rgba(var(--surface-dark-rgb,13,23,36), 0.28) !important;
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+.container:hover .front,
+.container:hover .back {
+  transition: transform .7s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.inner {
+  transform: translateY(-50%) translateZ(60px) scale(0.94);
+  top: 50%;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  padding: 2.8rem;
+  box-sizing: border-box;
+  outline: 1px solid transparent;
+  perspective: inherit;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container .back {
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+}
+
+.container .front {
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+}
+
+.container:hover .back {
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+}
+
+.container:hover .front {
+  transform: rotateY(-180deg);
+  transform-style: preserve-3d;
+}
+
+/* Mobile touch support */
+.col.hover .back {
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+}
+
+.col.hover .front {
+  transform: rotateY(-180deg);
+  transform-style: preserve-3d;
+}
+
+.front .inner p {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.front .inner p:after {
+  content: '';
+  width: 4rem;
+  height: 2px;
+  position: absolute;
+  background: #C6D4DF;
+  display: block;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: -.75rem;
+}
+
+.front .inner span {
+  color: rgba(255,255,255,0.7);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+}
+
+.back .inner p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+/* Responsive parallax cards */
+@media screen and (max-width: 64rem) {
+  .col {
+    width: calc(33.333333% - 2rem);
+  }
+}
+
+@media screen and (max-width: 48rem) {
+  .col {
+    width: calc(50% - 2rem);
+  }
+}
+
+@media screen and (max-width: 32rem) {
+  .col {
+    width: 100%;
+    margin: 0 0 2rem 0;
   }
 }
