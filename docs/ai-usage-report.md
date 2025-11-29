@@ -1,39 +1,102 @@
-# AI Usage Report
+# AI Usage Report – Assignment 3
 
-## How I Used AI’s Assistance in this Assignment
+## Overview
 
-1. Helped implement JavaScript logic for:
-   - Projects **live search** functionality
-   - **Contact form** inline validation and error messages
-   - **GitHub repo count** feature (API fetch + loading/retry states)
-   - Smooth **hover animations** on cards/sections
-
-2. Assisted with clarifying error handling patterns (loading text, friendly errors, retry flow).
-
-3. Improved text clarity in the README and technical documentation sections.
-
-4. Explained accessibility considerations (labels, aria-live status messages).
-
-5. Suggested a cleaner organization for CSS and JS sections.
+This report documents how AI tools (GitHub Copilot, ChatGPT, Claude) supported the development of advanced features for Assignment 3, including API integration, complex filtering logic, and state management.
 
 ---
 
-## Benefits
+## Feature Implementation with AI Assistance
 
-- Faster troubleshooting when adding interactive features  
-- Clear explanations of how to break down UI behavior into functions  
-- Better understanding of error states and user feedback patterns  
+### 1. GitHub API Integration
+
+**Objective:** Fetch and display public repositories with error handling.
+
+**AI Assistance:**
+- Generated fetch logic with error handling patterns
+- Suggested loading state management and retry button
+- Provided error handling for network/HTTP errors
+
+**My Adaptation:**
+- Customized username to "AtheerHani"
+- Added filtering for public repos
+- Implemented UI state updates (loading/error/success)
+- Added retry button functionality
+
+**Learning:** Understood fetch API error patterns and async flow control.
 
 ---
 
-## Challenges
+### 2. Skill Filtering with Multi-Category System
 
-Some AI-generated code was more complex than necessary, so I simplified parts to fit my learning level and the assignment requirements.
+**Objective:** Filter skills by category (All, UI/Design, Front-End, Back-End).
+
+**AI Assistance:**
+- Suggested event listener pattern for buttons
+- Provided CSS class toggling for animations
+- Helped structure data attributes
+
+**My Adaptation:**
+- Correctly categorized: UI/Design (Figma, Canva), Front-End (HTML, CSS, JS), Back-End (Node.js, Python, Java, MongoDB)
+- Added smooth fade-in animations
+- Enhanced button styling with active states
+
+**Learning:** Understood event handling, DOM manipulation, CSS animations.
 
 ---
 
-## Learning Outcomes
+### 3. State Persistence with localStorage
 
-- Using AI responsibly as a support tool, not a replacement  
-- Understanding the purpose of each added feature  
-- Improved confidence in writing JavaScript for real UI features (search, validation, API)  
+**Objective:** Remember user's filter selection across page reloads.
+
+**AI Assistance:**
+- Suggested localStorage API pattern
+- Provided key-value storage structure
+- Helped with state retrieval on load
+
+**My Adaptation:**
+- Integrated into filter function
+- Applied saved filter on page load
+- Ensured updates persist
+
+**Learning:** Understood browser storage and state workflows.
+
+---
+
+### 4. Contact Form Validation
+
+**AI-Reviewed Feature:** Multi-step validation (empty check → email verification → submit)  
+Demonstrates complex conditional logic, state management, error handling.
+
+---
+
+## Tools Used
+
+| Tool | Purpose |
+|------|---------|
+| **GitHub Copilot** | Fetch logic, event handlers, localStorage |
+| **ChatGPT** | Async/await, event listeners, debugging |
+| **Claude** | Error handling review |
+| **Browser DevTools** | Testing API calls & localStorage |
+
+---
+
+## What I Learned
+
+✅ Implement complete API workflows  
+✅ Multi-step state management patterns  
+✅ Complex conditional logic  
+✅ Error handling best practices  
+✅ Responsible AI usage in development  
+
+---
+
+## Ethical AI Usage
+
+✅ Transparent documentation  
+✅ Verified understanding of all code  
+✅ Adapted suggestions to requirements  
+✅ Used AI for learning, not replacement  
+✅ Acknowledged AI tools properly  
+
+AI accelerated development while maintaining quality through manual testing and refinement.

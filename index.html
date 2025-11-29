@@ -9,7 +9,6 @@
     <link rel="icon" type="image/png" href="assets/images/new favicon.png" sizes="32x32" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <style>
-      /* Theme-aware button shadow for contact form */
       html[data-theme="dark"] #contactForm button {
         box-shadow: 0 4px 12px rgba(255,255,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.08) !important;
       }
@@ -18,7 +17,6 @@
         color: #052033 !important;
       }
 
-      /* Success Modal */
       .modal-overlay {
         display: none;
         position: fixed;
@@ -78,7 +76,6 @@
     </style>
   </head>
   <body>
-    <!-- Success Modal -->
     <div id="successModal" class="modal-overlay">
       <div class="modal-content">Message Sent!</div>
     </div>
@@ -101,13 +98,12 @@
         </nav>
 
         <div class="header-actions">
-          <button id="themeToggle" class="btn small" aria-pressed="false" title="Toggle theme">🌓</button>
+          <button id="themeToggle" class="btn small" aria-pressed="false" title="Toggle theme">��</button>
         </div>
       </div>
     </header>
 
     <main>
-      <!-- ABOUT -->
       <section class="surface" id="about">
         <div class="container">
           <h2>
@@ -117,7 +113,7 @@
           <div class="about-content">
             <div class="about-text">
               <p><strong>Junior Software Engineering student focused on UI/UX, front-end development, and accessible web applications.</strong></p>
-              <p>I study at King Fahd University of Petroleum &amp; Minerals (KFUPM) and sharpen my skills through campus initiatives like Gaming+ and student-led conferences (GSR, KISEF). I’ve supported international delegations at academic Olympiads, combining leadership with technical work to deliver practical results.</p>
+              <p>I study at King Fahd University of Petroleum &amp; Minerals (KFUPM) and sharpen my skills through campus initiatives like Gaming+ and student-led conferences (GSR, KISEF). I've supported international delegations at academic Olympiads, combining leadership with technical work to deliver practical results.</p>
               <p>I enjoy building intuitive interfaces and practical web apps that solve real problems, with a strong interest in usability and accessibility.</p>
             </div>
             <div class="about-aside">
@@ -127,45 +123,64 @@
         </div>
       </section>
 
-      <!-- TECHNICAL SKILLS (moved here from Experience) -->
       <section class="skills-section">
-        <!-- Consolidated skills grid: 6 key skills, one Figma entry only -->
         <div class="container">
+          <div class="skills-filter">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="ui">UI/Design</button>
+            <button class="filter-btn" data-filter="frontend">Front-End</button>
+            <button class="filter-btn" data-filter="backend">Back-End</button>
+          </div>
+
           <div class="skills-grid" role="list" aria-label="Key technical skills">
-            <div class="skill-card" role="listitem">
+            <div class="skill-card" role="listitem" data-category="ui">
               <img src="assets/images/figma.png" alt="Figma logo">
               <div class="skill-name">Figma</div>
             </div>
 
-            <div class="skill-card" role="listitem">
+            <div class="skill-card" role="listitem" data-category="frontend">
               <img src="assets/images/html.png" alt="HTML logo">
               <div class="skill-name">HTML</div>
             </div>
 
-            <div class="skill-card" role="listitem">
+            <div class="skill-card" role="listitem" data-category="frontend">
               <img src="assets/images/css.png" alt="CSS logo" width="512" height="512">
               <div class="skill-name">CSS</div>
             </div>
 
-            <div class="skill-card" role="listitem">
-              <img src="assets/images/python.png" alt="Python logo">
-              <div class="skill-name">Python</div>
-            </div>
-
-            <div class="skill-card" role="listitem">
+            <div class="skill-card" role="listitem" data-category="frontend">
               <img src="assets/images/js.png" alt="JavaScript logo">
               <div class="skill-name">JavaScript</div>
             </div>
 
-            <div class="skill-card" role="listitem">
+            <div class="skill-card" role="listitem" data-category="backend">
+              <img src="assets/images/nodejs.png" alt="Node.js logo">
+              <div class="skill-name">Node.js</div>
+            </div>
+
+            <div class="skill-card" role="listitem" data-category="backend">
+              <img src="assets/images/python.png" alt="Python logo">
+              <div class="skill-name">Python</div>
+            </div>
+
+            <div class="skill-card" role="listitem" data-category="backend">
               <img src="assets/images/java.png" alt="Java logo">
               <div class="skill-name">Java</div>
+            </div>
+
+            <div class="skill-card" role="listitem" data-category="backend">
+              <img src="assets/images/mongodb.png" alt="MongoDB logo">
+              <div class="skill-name">MongoDB</div>
+            </div>
+
+            <div class="skill-card" role="listitem" data-category="ui">
+              <img src="assets/images/canva.png" alt="Canva logo">
+              <div class="skill-name">Canva</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- PROJECTS (embedded) -->
       <section class="surface" id="projects">
         <div class="wrapper">
           <h2>Projects</h2>
@@ -179,7 +194,7 @@
                 </div>
                 <div class="back">
                   <div class="inner">
-                    <p>حُجرة connects people with unused spaces to those seeking affordable storage solutions. It includes listings, booking, secure payments, and messaging.</p>
+                    <p>A web application for browsing and reserving storage spaces (rooms, basements, small units). Implemented with React.</p>
                   </div>
                 </div>
               </div>
@@ -202,7 +217,21 @@
         </div>
       </section>
 
-      <!-- EXPERIENCE (embedded) -->
+      <section class="surface" id="github-repos">
+        <div class="container">
+          <div class="section-head">
+            <h2>GitHub Repositories</h2>
+          </div>
+          <div id="repos-container" class="repos-grid">
+            <p id="repos-loading" style="text-align: center; padding: 2rem;">Loading repositories...</p>
+          </div>
+          <div id="repos-error" style="display: none; text-align: center; color: #e74c3c; padding: 2rem;">
+            <p id="error-message"></p>
+            <button id="retry-btn" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #40A8C6; color: white; border: none; border-radius: 5px; cursor: pointer;">Retry</button>
+          </div>
+        </div>
+      </section>
+
       <section class="surface" id="experience">
         <div class="container">
           <div class="section-head">
@@ -301,13 +330,10 @@
         </div>
       </section>
 
-      <!-- CONTACT (embedded) -->
       <section class="surface" id="contact">
         <div class="container">
-          <!-- Two-column layout: Contact form (left) + Cube game (right) -->
           <div class="contact-section-wrapper" style="display: flex; gap: 40px; align-items: flex-start;">
             
-            <!-- LEFT COLUMN: Contact Form -->
             <div class="contact-wrapper" style="flex: 2 1 450px; min-width: 450px;">
               <div class="contact-card" style="position:relative; border-radius:14px; padding:60px 48px; background:rgba(13,23,36,0.28) !important; border:1px solid rgba(255,255,255,0.04) !important; box-shadow:0 18px 42px rgba(11,33,56,0.12) !important; backdrop-filter:blur(8px) saturate(120%) !important; -webkit-backdrop-filter:blur(8px) saturate(120%) !important;">
                 <div class="contact-head" style="margin-bottom:36px;">
@@ -338,7 +364,6 @@
               </div>
             </div>
 
-            <!-- RIGHT COLUMN: Interactive Rubik's Cube -->
             <div class="cube-container" style="flex: 1 1 400px; min-width: 300px; min-height: 600px; position: relative; background: transparent; border: none; box-shadow: none;">
               <div class="ui">
                 <div class="ui__game"></div>

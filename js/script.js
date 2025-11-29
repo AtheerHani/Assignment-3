@@ -3,6 +3,77 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
+/* GitHub API Integration */
+(function initGitHubRepos() {
+  const GITHUB_USERNAME = 'AtheerHani';
+  const reposContainer = $('#repos-container');
+  const errorContainer = $('#repos-error');
+  const loadingText = $('#repos-loading');
+  const errorMessage = $('#error-message');
+  const retryBtn = $('#retry-btn');
+
+  if (!reposContainer) return;
+
+  function displayError(message) {
+    loadingText.style.display = 'none';
+    reposContainer.style.display = 'none';
+    errorContainer.style.display = 'block';
+    errorMessage.textContent = message;
+  }
+
+  function displayRepos(repos) {
+    loadingText.style.display = 'none';
+    errorContainer.style.display = 'none';
+    reposContainer.style.display = 'grid';
+    reposContainer.innerHTML = '';
+
+    if (repos.length === 0) {
+      reposContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No public repositories found.</p>';
+      return;
+    }
+
+    repos.slice(0, 6).forEach(repo => {
+      const card = document.createElement('div');
+      card.className = 'repo-card';
+      card.innerHTML = `
+        <h3 class="repo-name">${repo.name}</h3>
+        <p class="repo-desc">${repo.description || 'No description available'}</p>
+        <div class="repo-meta">
+          ${repo.language ? `<span class="repo-language"><span class="repo-language-dot"></span>${repo.language}</span>` : ''}
+          <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="repo-link">View on GitHub →</a>
+        </div>
+      `;
+      reposContainer.appendChild(card);
+    });
+  }
+
+  function fetchRepos() {
+    loadingText.style.display = 'block';
+    errorContainer.style.display = 'none';
+    reposContainer.style.display = 'none';
+
+    fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const publicRepos = data.filter(repo => !repo.private).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        displayRepos(publicRepos);
+      })
+      .catch(error => {
+        console.error('Error fetching repos:', error);
+        displayError(`Failed to load repositories. ${error.message}. Please try again.`);
+      });
+  }
+
+  fetchRepos();
+
+  if (retryBtn) {
+    retryBtn.addEventListener('click', fetchRepos);
+  }
+})();
+
 /* Theme-aware logo switching for project cards */
 (function initProjectLogos() {
   function updateProjectLogos() {
@@ -942,6 +1013,60 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     console.error('scrollRevealInit error', e);
   }
 })();
+
+/* Skills Filter: toggle visibility based on category selection */
+(function initSkillsFilter() {
+  const filterBtns = $$('.filter-btn');
+  const skillCards = $$('.skill-card');
+  const FILTER_KEY = 'skillsFilterSelection';
+
+  if (!filterBtns || filterBtns.length === 0 || !skillCards || skillCards.length === 0) return;
+
+  // Load saved filter preference
+  let savedFilter = 'all';
+  try {
+    savedFilter = localStorage.getItem(FILTER_KEY) || 'all';
+  } catch (e) { /* ignore */ }
+
+  // Apply filter
+  const applyFilter = (category) => {
+    filterBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-filter') === category);
+    });
+
+    skillCards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      const matches = category === 'all' || cardCategory === category;
+      
+      if (matches) {
+        card.classList.remove('hidden');
+        // Trigger animation by removing and re-adding
+        card.style.animation = 'none';
+        void card.offsetHeight; // force reflow
+        card.style.animation = '';
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Save filter preference
+    try {
+      localStorage.setItem(FILTER_KEY, category);
+    } catch (e) { /* ignore */ }
+  };
+
+  // Set up button listeners
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.getAttribute('data-filter');
+      applyFilter(category);
+    });
+  });
+
+  // Apply saved filter on load
+  applyFilter(savedFilter);
+})();
+
 /* ========== INTERACTIVE RUBIK'S CUBE FOR PORTFOLIO ========== */
 (function initPortfolioRubiksCube() {
   if (typeof THREE === 'undefined') return;
